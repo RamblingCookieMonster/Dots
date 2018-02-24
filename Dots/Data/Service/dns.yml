@@ -1,0 +1,6 @@
+name: DNS
+qualifier: ad.contoso.com
+keywords: dns, domain name system, name, resolution
+description: Name resolution
+security_tier: 0
+outage_tier: 0

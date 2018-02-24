@@ -1,0 +1,5 @@
+name: Desired State Configuration
+keywords: DSC, push, pull, configuration, cfg, config
+description: Various DSC and configuration management services
+security_tier: 0
+outage_tier: 0

@@ -1,0 +1,6 @@
+name: Active Directory
+qualifier: ad.contoso.com
+keywords: ldap, ldaps, kerberos, identity, authentication
+description: identity, authentication, and related services
+security_tier: 0
+outage_tier: 0

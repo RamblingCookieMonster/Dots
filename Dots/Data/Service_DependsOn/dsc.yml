@@ -1,0 +1,24 @@
+service:
+  part_of_service: True
+  servers:
+    - cfgmgmt01.ad.contoso.com
+  properties:
+    load_balanced: False
+
+names:
+  services:
+    - dns
+  properties:
+    outage_impact: No name resolution
+
+auth:
+  services:
+    - ad
+  properties:
+    outage_impact: No authentication
+
+code:
+  services:
+    - gitlab
+  properties:
+    outage_impact: No changes to DSC code

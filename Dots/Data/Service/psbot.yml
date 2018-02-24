@@ -1,0 +1,5 @@
+name: PSBot
+keywords: Slack bot, chatops, chat, poshbot, powershell
+description: poshbot based Slack bot
+security_tier: 2
+outage_tier: 2

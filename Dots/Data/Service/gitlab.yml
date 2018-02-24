@@ -1,0 +1,6 @@
+name: GitLab
+qualifier: int
+keywords: git, gitlab, source control, version control, puppet, collaboration
+description: GitLab, used for various source control, collaboration, and CI/CD needs
+security_tier: 0
+outage_tier: 0

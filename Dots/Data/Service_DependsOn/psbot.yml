@@ -1,0 +1,14 @@
+service:
+  part_of_service: True
+  servers:
+    - web01.ad.contoso.com
+  properties:
+    load_balanced: True
+
+names:
+  services:
+    - dns
+  properties:
+    outage_impact: No name resolution
+
+
