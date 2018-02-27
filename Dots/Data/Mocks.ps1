@@ -1,27 +1,35 @@
 function Get-ADComputer {
     [pscustomobject]@{
         DNSHostname = 'dc01.ad.contoso.com'
+        Name = 'dc01'
         OperatingSystem = 'Windows Server 2016 Datacenter'
         OperatingSystemVersion = '10.0 (14393)'
         CanonicalName = 'ad.contoso.com/tier 0/computers/dc01'
+        lastlogondate = [datetime]::Now
     },
     [pscustomobject]@{
         DNSHostname = 'dc02.ad.contoso.com'
+        Name = 'dc02'
         OperatingSystem = 'Windows Server 2016 Datacenter'
         OperatingSystemVersion = '10.0 (14393)'
         CanonicalName = 'ad.contoso.com/tier 0/computers/dc02'
+        lastlogondate = [datetime]::Now
     },
     [pscustomobject]@{
         DNSHostname = 'cfgmgmt01.ad.contoso.com'
+        Name = 'cfgmgmt01'
         OperatingSystem = 'Windows Server 2016 Datacenter'
         OperatingSystemVersion = '10.0 (14393)'
         CanonicalName = 'ad.contoso.com/tier 0/computers/cfgmgmt01'
+        lastlogondate = [datetime]::Now
     },
     [pscustomobject]@{
         DNSHostname = 'psbot01.ad.contoso.com'
+        Name = 'psbot01'
         OperatingSystem = 'Windows Server 2016 Datacenter'
         OperatingSystemVersion = '10.0 (14393)'
         CanonicalName = 'ad.contoso.com/tier 1/computers/psbot01'
+        lastlogondate = [datetime]::Now
     }
 }
 
@@ -55,35 +63,35 @@ function Get-PDBNodeFact {
             [pscustomobject]@{
                 certname = 'dc01.ad.contoso.com'
                 environment = 'production'
-                puppet_classes = 'default,nagios::base,nagios::client,profiles::base,profiles::service::nxlog,roles::service::msadds'
+                puppet_classes = '["default", "nagios::base", "nagios::client", "profiles::base", "profiles::service::nxlog", "roles::service::msadds"]'
             }
         }
         'dc02.ad.contoso.com' {
             [pscustomobject]@{
                 certname = 'dc02.ad.contoso.com'
                 environment = 'wframe/winlogbeat'
-                puppet_classes = 'default,nagios::base,nagios::client,profiles::base,profiles::service::winlogbeat,roles::service::msadds'
+                puppet_classes = '["default", "nagios::base", "nagios::client", "profiles::base", "profiles::service::winlogbeat", "roles::service::msadds"]'
             }
         }
         'cfgmgmt01.ad.contoso.com' {
             [pscustomobject]@{
                 certname = 'cfgmgmt01.ad.contoso.com'
                 environment = 'production'
-                puppet_classes = 'default,nagios::base,nagios::client,profiles::base,profiles::service::nxlog'
+                puppet_classes = '["default", "nagios::base", "nagios::client", "profiles::base", "profiles::service::nxlog"]'
             }
         }
         'gitlab01.ad.contoso.com' {
             [pscustomobject]@{
                 certname = 'gitlab01.ad.contoso.com'
                 environment = 'production'
-                puppet_classes = 'default,nagios::base,nagios::client,profiles::base,roles::service::gitlab'
+                puppet_classes = '["default", "nagios::base", "nagios::client", "profiles::base", "roles::service::gitlab"]'
             }
         }
         'psbot01.ad.contoso.com' {
             [pscustomobject]@{
                 certname = 'psbot01.ad.contoso.com'
                 environment = 'production'
-                puppet_classes = 'default,nagios::base,nagios::client,profiles::base,profiles::service::nxlog,roles::psbot'
+                puppet_classes = '["default", "nagios::base", "nagios::client", "profiles::base", "profiles::service::nxlog", "roles::psbot"]'
             }
         }
     }
@@ -98,7 +106,7 @@ function Get-ADUser {
         sid = 'S-1-5-21-1004336348-1177238915-682003330-11111'
         distinguishedname = 'CN=wframe,OU=Domain Users,DC=ad,DC=contoso,DC=com'
         memberof = @('CN=computer-admin-psbot01,OU=groups,OU=tier 1,DC=ad,DC=contoso,DC=com', 'CN=Domain Users,CN=Users,DC=ad,DC=contoso,DC=com', 'CN=psbot-users,OU=Domain Groups,DC=ad,DC=contoso,DC=com')
-        lastlogondate = [datetime]::Now()
+        lastlogondate = [datetime]::Now
     },
     [pscustomobject]@{
         samaccountname = 'wframet0'
@@ -108,7 +116,7 @@ function Get-ADUser {
         sid = 'S-1-5-21-1004336348-1177238915-682003330-22222'
         distinguishedname = 'CN=wframet0,OU=Domain Users,DC=ad,DC=contoso,DC=com'
         memberof = @('CN=Domain Admins,CN=Users,DC=ad,DC=contoso,DC=com', 'CN=Domain Users,CN=Users,DC=ad,DC=contoso,DC=com')
-        lastlogondate = [datetime]::Now()
+        lastlogondate = [datetime]::Now
     }
 }
 
@@ -136,23 +144,5 @@ function Get-ADGroup {
         name = 'psbot-users'
         distinguishedname = 'CN=psbot-users,OU=Domain Groups,DC=ad,DC=contoso,DC=com'
         SID = 'S-1-5-21-1004336348-1177238915-682003330-222222'
-    }
-}
-
-function Get-ScheduledTasks {
-    [pscustomobject]@{
-        ComputerName = 'psbot01'
-        Name = 'Watch-PSBot'
-        Path = '\Watch-PSBot'
-        Enabled = $True
-        Action = 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
-        Arguments = '-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "C:\tasks\Watch-PSBot.ps1"'
-        UserId = 'NT AUTHORITY\System'
-        LastRunTime = Get-Date "2/26/2018 9:03:27 PM"
-        NextRunTime = Get-Date "2/26/2018 9:13:28 PM"
-        Status = 'Ready'
-        Author = 'contoso\wframe'
-        RunLevel = 'HighestAvailable'
-        Description = 'Watch for PSBot presence -ne active'
     }
 }

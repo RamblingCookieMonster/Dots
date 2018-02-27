@@ -5,21 +5,22 @@ $ModuleRoot = $PSScriptRoot
 $ScriptsPath = (Resolve-Path "$ModuleRoot\IngestionScripts").Path
 $AutoPath = (Resolve-Path "$ScriptsPath\Auto").Path
 $ManualPath = (Resolve-Path "$ScriptsPath\Manual").Path
+$ManualSortPath = Join-Path $ManualPath sort.txt
 $ConfPath = (Resolve-Path "$ModuleRoot\Conf").Path
 $DataPath = (Resolve-Path "$ModuleRoot\Data").Path
 
+
 #Dot source the files
-Foreach($import in @($Public + $Private))
-{
-    Try
-    {
+Foreach($import in @($Public + $Private)) {
+    try {
         Write-Host "Importing $($Import.FullName)"
         . $import.fullname
     }
-    Catch
-    {
+    catch {
         Write-Error -Message "Failed to import function $($import.fullname): $_"
     }
 }
+
+. $(Join-Path $ConfPath Dots.Config.ps1)
 
 Export-ModuleMember -Function $Public.Basename

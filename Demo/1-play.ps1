@@ -3,27 +3,7 @@
 Get-ADComputer | New-Neo4jNode -Label Server -Passthru
 
 # Create some services
-[pscustomobject]@{
-    Name = 'Active Directory'
-    Description = 'Identity and related services'
-},
-[pscustomobject]@{
-    Name = 'DNS'
-    Description = 'Domain naming system'
-},
-[pscustomobject]@{
-    Name = 'DSC'
-    Description = 'Configuration management pull server'
-},
-[pscustomobject]@{
-    Name = 'GitLab'
-    Description = 'Source control and CI/CD'
-},
-[pscustomobject]@{
-    Name = 'WebThingy'
-    Description = 'Important internal web service'
-} |
-    New-Neo4jNode -Label Service -Passthru
+#TODO: Connect-TheDots
 
 # See what we have
 Invoke-Neo4jQuery -Query @"

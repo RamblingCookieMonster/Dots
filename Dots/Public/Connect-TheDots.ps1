@@ -40,16 +40,32 @@ function Connect-TheDots {
         $Scripts = $Scripts | Where-Object {$ResolvedExcludes -NotContains $_}
         Write-Verbose "Excluding specified scripts: $($Scripts.FullName | Out-String)"
     }
+    # Sort by file first, then dependencies (dependencies should override)
+    if(Test-Path $ManualSortPath) {
+        $Order = Get-Content $ManualSortPath
+        if($Order) {
+            $Scripts = $Scripts | Sort-CustomList -List $Order -SortOnProperty BaseName
+            Write-Verbose "Sorting Manual scripts with order [$Order]"
+        }
+    }
     if($Dependencies) {
         $DependencyOrder = Get-TopologicalSort $Dependencies
         $Scripts = Sort-ObjectWithCustomList -InputObject $Scripts -Property BaseName -CustomList $DependencyOrder
     }
-    Write-Verbose "Running Scripts: $($Scripts.FullName | Out-String)"
 
+    Write-Verbose "Running Scripts: $($Scripts.FullName | Out-String)"
     foreach($Script in $Scripts) {
         try {
-            Write-Verbose "Dot sourcing $Script"
-            #. $Script -ErrorAction Stop
+            $ConfigScript = Join-Path $ConfPath "$($Script.BaseName).Config.ps1"
+            if(Test-Path $ConfigScript) {
+                Write-Verbose "Dot sourcing [$ConfigScript]"
+                . $ConfigScript
+            }
+            else {
+                Write-Verbose "No config script found at [$ConfigScript]"
+            }
+            Write-Verbose "Dot sourcing [$Script]"
+            . $Script -ErrorAction Stop
         }
         catch {
             Write-Error $_

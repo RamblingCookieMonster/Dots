@@ -6,7 +6,7 @@ $Transforms = '*',
     },
     @{
         label='NameLower'
-        expression={$Node.name.ToLower()}
+        expression={$Node.certname.ToLower()}
     },
     @{
         label='Classes'

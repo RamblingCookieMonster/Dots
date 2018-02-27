@@ -10,15 +10,19 @@ param(
         'LastLogonDate',
         'OperatingSystem',
         'OperatingSystemVersion',
-        'DNSHostName'
+        'DNSHostName',
+        'Name'
     ),
-    [switch]$NoCreate,
-    [string[]]$Excludes,
-    [object[]]$Transforms,
-    [string]$Unique
+    [string[]]$Excludes = @('Name'),
+    [object[]]$Transforms
 )
 # Dot source so module import is available in this scope
-. Import-RequiredModule ActiveDirectory -ErrorAction Stop
+if($TestMode) {
+    . $(Join-Path $DataPath Mocks.ps1)
+}
+else {
+    . Import-RequiredModule ActiveDirectory -ErrorAction Stop
+}
 
 # Resolve Dots config, script config, override with parameters if defined
 $ConfigPath = Get-ConfigPath Dots
@@ -29,7 +33,7 @@ $ConfigPath = Get-ConfigPath $PSCommandPath
 if($ConfigPath) {
     . $ConfigPath
 }
-'Excludes', 'Transforms', 'Unique' | ForEach-Object {
+'Excludes', 'Transforms' | ForEach-Object {
     if($PSBoundParameters.ContainsKey($_)) {
         Set-Variable -Name $_ -Value $PSBoundParameters[$_] -Force
     }
@@ -42,14 +46,15 @@ $Nodes = Get-ADComputer -Filter * -Properties $Properties |
     Select-Object -Property $Transforms -ExcludeProperty $Excludes
 
 $Nodes = Foreach($Node in $Nodes) {
-    Add-PropertyPrefix -Prefix $Prefix -Object $Node
-    Add-Member -InputObject $Node -MemberType NoteProperty -Name "${CMDBPrefix}${Prefix}UpdateDate" -Value $Date -Force
+    $Output = Add-PropertyPrefix -Prefix $Prefix -Object $Node
+    Add-Member -InputObject $Output -MemberType NoteProperty -Name "${CMDBPrefix}${Prefix}UpdateDate" -Value $Date -Force
+    $Output
 }
 
 $TotalCount = $Nodes.count
 $Count = 0
 Foreach($Node in $Nodes) {
-    Write-Progress -Activity "Updating Neo4j" -Status  "Adding $($Node.$Unique)" -PercentComplete (($Count / $TotalCount)*100)
+    Write-Progress -Activity "Updating Neo4j" -Status  "Adding $($Node.$MergeProperty)" -PercentComplete (($Count / $TotalCount)*100)
     $Count++
-    Set-Neo4jNode -Label $Label -Hash @{$ServerUnique = ($Node.$Unique).ToLower()} -InputObject $Node
+    Set-Neo4jNode -Label $Label -Hash @{$ServerUnique = ($Node."${Prefix}${MergeProperty}").ToLower()} -InputObject $Node
 }

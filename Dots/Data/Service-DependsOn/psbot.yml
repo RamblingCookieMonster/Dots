@@ -1,19 +1,14 @@
 service:
   part_of_service: True
   servers:
-    - dc01.ad.contoso.com
-    - dc01.ad.contoso.com
+    - psbot01.ad.contoso.com
   properties:
     load_balanced: True
-
-config:
-  services:
-    - dsc
-  properties:
-    outage_impact: No configuration updates
 
 names:
   services:
     - dns
   properties:
     outage_impact: No name resolution
+
+

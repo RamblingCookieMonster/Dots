@@ -4,10 +4,11 @@
 #>
 Invoke-Neo4jQuery -Query "MATCH (s:Service) DETACH DELETE s"
 Invoke-Neo4jQuery -Query "MATCH ()-[r:Owns]->() DELETE r"
+Invoke-Neo4jQuery -Query "MATCH ()-[r:Uses]->() DELETE r"
 
 "Running $($MyInvocation.MyCommand.Name )"
 "####################"
-$files = Get-ChildItem $ENV:BHProjectPath\Data\Service\*.yml -File | Where-Object {$_.BaseName -notmatch '^[0-9].*Template.*'}
+$files = Get-ChildItem $DataPath\Service\*.yml -File | Where-Object {$_.BaseName -notmatch '^[0-9].*Template.*'}
 
 function Get-AccountLabel {
     [cmdletbinding()]
@@ -39,7 +40,7 @@ foreach($file in $files) {
     Test-BadOutput -Ingestor $MyInvocation.MyCommand.Name `
                    -YamFile $File `
                    -DataHash $($Data | Out-String) `
-                   -DataKey $namekey`
+                   -DataKey $namekey `
                    -Specific "service $namekey" `
                    -Output $Output
 
@@ -62,7 +63,7 @@ foreach($file in $files) {
             Test-BadOutput -Ingestor $MyInvocation.MyCommand.Name `
                            -YamFile $File `
                            -DataHash $($Data | Out-String) `
-                           -DataKey $namekey`
+                           -DataKey $namekey `
                            -Specific "Owner $Account, service $namekey" `
                            -Output $Output
         }
@@ -86,7 +87,7 @@ foreach($file in $files) {
             Test-BadOutput -Ingestor $MyInvocation.MyCommand.Name `
                            -YamFile $File `
                            -DataHash $($Data | Out-String) `
-                           -DataKey $namekey`
+                           -DataKey $namekey `
                            -Specific "Uses system $Account, service $namekey" `
                            -Output $Output
         }
