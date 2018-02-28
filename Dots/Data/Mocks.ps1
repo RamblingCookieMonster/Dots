@@ -146,3 +146,21 @@ function Get-ADGroup {
         SID = 'S-1-5-21-1004336348-1177238915-682003330-222222'
     }
 }
+
+function Get-ScheduledTasks {
+    [pscustomobject]@{
+        ComputerName = 'psbot01'
+        Name = 'Watch-PSBot'
+        Path = '\Watch-PSBot'
+        Enabled = $True
+        Action = 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
+        Arguments = '-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "C:\tasks\Watch-PSBot.ps1"'
+        UserId = 'NT AUTHORITY\System'
+        LastRunTime = Get-Date "2/26/2018 9:03:27 PM"
+        NextRunTime = Get-Date "2/26/2018 9:13:28 PM"
+        Status = 'Ready'
+        Author = 'contoso\wframe'
+        RunLevel = 'HighestAvailable'
+        Description = 'Watch for PSBot presence -ne active'
+    }
+}

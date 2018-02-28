@@ -1,5 +1,6 @@
 function Connect-TheDots {
-    [cmdletbinding()]
+[cmdletbinding( SupportsShouldProcess = $True,
+                ConfirmImpact='High' )]
     param(
         [validateset('Auto', 'Manual')]
         [string]$Scope,
@@ -7,6 +8,8 @@ function Connect-TheDots {
         [string[]]$Exclude,
         [hashtable]$Dependencies
     )
+    $RejectAll = $false
+    $ConfirmAll = $false
     $Scripts = Get-ChildItem $ScriptsPath -Recurse -Include *.ps1
     Write-Verbose "Found scripts $($Scripts.FullName | Out-String)"
     if($Scope -eq 'Auto') {
@@ -55,20 +58,25 @@ function Connect-TheDots {
 
     Write-Verbose "Running Scripts: $($Scripts.FullName | Out-String)"
     foreach($Script in $Scripts) {
-        try {
-            $ConfigScript = Join-Path $ConfPath "$($Script.BaseName).Config.ps1"
-            if(Test-Path $ConfigScript) {
-                Write-Verbose "Dot sourcing [$ConfigScript]"
-                . $ConfigScript
+        if ( $PSCmdlet.ShouldProcess( "Connected the dots '$($Script.Fullname)'",
+                                      "Connect the dots '$($Script.Fullname)'?",
+                                      "Connecting dots" )
+        ) {
+            try {
+                $ConfigScript = Join-Path $ConfPath "$($Script.BaseName).Config.ps1"
+                if(Test-Path $ConfigScript) {
+                    Write-Verbose "Dot sourcing [$ConfigScript]"
+                    . $ConfigScript
+                }
+                else {
+                    Write-Verbose "No config script found at [$ConfigScript]"
+                }
+                Write-Verbose "Dot sourcing [$Script]"
+                . $Script -ErrorAction Stop
             }
-            else {
-                Write-Verbose "No config script found at [$ConfigScript]"
+            catch {
+                Write-Error $_
             }
-            Write-Verbose "Dot sourcing [$Script]"
-            . $Script -ErrorAction Stop
-        }
-        catch {
-            Write-Error $_
         }
     }
     Write-Verbose "Dots Connected!"
