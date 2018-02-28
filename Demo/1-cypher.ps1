@@ -58,7 +58,7 @@ RETURN n
 
 # all server dependson service nodes and relationships
 Invoke-Neo4jQuery -Query @"
-MATCH all=(s:Server)-[r:IsPartOf]->(svc:Service)
+MATCH (s:Server)-[r:IsPartOf]->(svc:Service)
 RETURN s,r,svc
 "@ | Format-List -Force
 

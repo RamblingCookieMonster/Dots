@@ -8,6 +8,7 @@ choco install neo4j-community -y
 
 # Install psneo4j
 Install-Module PSNeo4j -Force
+Import-Module PSNeo4j -Force
 
 # Set initial password and psneo4j config
 $Password = ConvertTo-SecureString -String "myneo4jpassword!" -AsPlainText -Force
@@ -20,4 +21,4 @@ Set-PSNeo4jConfiguration -Credential $Credential -BaseUri 'http://127.0.0.1:7474
 # In "C:\tools\neo4j-community\neo4j-community-3.2.3\conf\neo4j.conf"
 
 Get-Neo4jUser
-Get-Neo4jActiveConfig
+Get-Neo4jActiveConfig | Format-List

@@ -7,9 +7,9 @@ Import-Module E:\Dots -Force
 Clear-Neo4j
 
 Connect-TheDots -WhatIf
-
 Connect-TheDots -WhatIf -Include ADComputers
 Connect-TheDots -WhatIf -Scope Manual
+
 
 Connect-TheDots -Confirm:$False
 
