@@ -2,7 +2,9 @@
 Invoke-Neo4jQuery "MATCH (:Service)-[r:DependsOn]->() DELETE r"
 Invoke-Neo4jQuery -Query "MATCH ()-[r:IsPartOf]->(:Service) DELETE r"
 
+"`n###############"
 "Running $($MyInvocation.MyCommand.Name )"
+"###############"
 $files = Get-ChildItem $DataPath\Service-DependsOn\*.yml -File | Where-Object {$_.BaseName -notmatch '^[0-9].*Template$'}
 foreach($file in $files) {
     "### PARSING ### $($file.fullname)"

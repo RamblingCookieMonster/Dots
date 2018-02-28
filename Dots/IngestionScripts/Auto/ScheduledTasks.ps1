@@ -48,7 +48,7 @@ if($ConfigPath) {
     Write-Verbose "$_ is $(Get-Variable -Name $_ -ValueOnly | Out-String)"
 }
 
-$Tasks = Get-ScheduledTasks |
+[object[]]$Tasks = Get-ScheduledTasks |
     Select-Object -Property $Properties |
     Select-Object -Property $Transforms -ExcludeProperty $Excludes
 
@@ -63,20 +63,23 @@ $Count = 0
 Foreach($Task in $Tasks) {
     Write-Progress -Activity "Updating Neo4j" -Status  "Adding task $($Task.$MergeProperty)" -PercentComplete (($Count / $TotalCount)*100)
     $Count++
+
     Set-Neo4jNode -InputObject $Task -Label $Label -Hash @{
         TSKHostName = $Task.TSKHostName
-        TSKPath = $Task.TSKPath
+        TSKTaskPath = $Task.TSKTaskPath
     }
 
     # hostname's not unique across all qualified doman namespaces?  Use different logic
     New-Neo4jRelationship -LeftQuery "MATCH (left:Task)
                                       WHERE left.TSKHostName = {TSKHostName} AND
-                                            left.TSKPath = {TSKPath}" `
+                                            left.TSKTaskPath = {TSKTaskPath}" `
                           -RightQuery "MATCH (right:Server)
-                          WHERE right.{$CMDBPrefix}HostName =~ {TSKHostName} AND
-                                left.TSKPath = {TSKPath}" `
-                          -Parameters `
-                          -Properties `
+                          WHERE right.${CMDBPrefix}HostName STARTS WITH {Start}" `
+                          -Parameters  @{
+                              TSKHostName = $Task.TSKHostName
+                              TSKTaskPath = $Task.TSKTaskPath
+                              Start = "$($Task.TSKHostName)." # Assumes host names are unique across all domains
+                          } `
                           -Type RunsOn
 
 }

@@ -6,7 +6,8 @@ function Connect-TheDots {
         [string]$Scope,
         [string[]]$Include,
         [string[]]$Exclude,
-        [hashtable]$Dependencies
+        [hashtable]$Dependencies,
+        [switch]$Show
     )
     $RejectAll = $false
     $ConfirmAll = $false
@@ -44,11 +45,11 @@ function Connect-TheDots {
         Write-Verbose "Excluding specified scripts: $($Scripts.FullName | Out-String)"
     }
     # Sort by file first, then dependencies (dependencies should override)
-    if(Test-Path $ManualSortPath) {
-        $Order = Get-Content $ManualSortPath
+    if(Test-Path $SortPath) {
+        $Order = Get-Content $SortPath
         if($Order) {
             $Scripts = $Scripts | Sort-CustomList -List $Order -SortOnProperty BaseName
-            Write-Verbose "Sorting Manual scripts with order [$Order]"
+            Write-Verbose "Sorting scripts with order [$Order]"
         }
     }
     if($Dependencies) {

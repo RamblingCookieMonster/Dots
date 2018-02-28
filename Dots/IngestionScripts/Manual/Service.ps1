@@ -6,8 +6,9 @@ Invoke-Neo4jQuery -Query "MATCH (s:Service) DETACH DELETE s"
 Invoke-Neo4jQuery -Query "MATCH ()-[r:Owns]->() DELETE r"
 Invoke-Neo4jQuery -Query "MATCH ()-[r:Uses]->() DELETE r"
 
+"`n###############"
 "Running $($MyInvocation.MyCommand.Name )"
-"####################"
+"###############"
 $files = Get-ChildItem $DataPath\Service\*.yml -File | Where-Object {$_.BaseName -notmatch '^[0-9].*Template.*'}
 
 function Get-AccountLabel {

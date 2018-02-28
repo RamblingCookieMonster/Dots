@@ -38,7 +38,7 @@ New-Neo4jRelationship -LeftLabel Server -LeftHash @{DNSHostname = 'dc01.ad.conto
                       -Properties @{
                           LoadBalanced = $True
                           HighlyAvailable = $True
-                      }
+                      } -Passthru
 
 New-Neo4jRelationship -LeftLabel Server -LeftHash @{DNSHostname = 'dc02.ad.contoso.com'} `
                       -RightLabel Service -RightHash @{name = 'Active Directory'} `

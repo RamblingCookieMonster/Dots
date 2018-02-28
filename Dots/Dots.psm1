@@ -5,15 +5,15 @@ $ModuleRoot = $PSScriptRoot
 $ScriptsPath = (Resolve-Path "$ModuleRoot\IngestionScripts").Path
 $AutoPath = (Resolve-Path "$ScriptsPath\Auto").Path
 $ManualPath = (Resolve-Path "$ScriptsPath\Manual").Path
-$ManualSortPath = Join-Path $ManualPath sort.txt
 $ConfPath = (Resolve-Path "$ModuleRoot\Conf").Path
 $DataPath = (Resolve-Path "$ModuleRoot\Data").Path
+$SortPath = Join-Path $ConfPath sort.txt
+
 
 
 #Dot source the files
 Foreach($import in @($Public + $Private)) {
     try {
-        Write-Host "Importing $($Import.FullName)"
         . $import.fullname
     }
     catch {
