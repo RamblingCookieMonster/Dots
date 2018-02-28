@@ -3,7 +3,6 @@ Import-Module $DotsPath\.requirements\psneo4j -Force
 
 Clear-Neo4j
 
-ise $DotsPath\Data\Mocks.ps1
 . $DotsPath\Data\Mocks.ps1
 Get-ADComputer
 
@@ -23,7 +22,7 @@ Get-ADComputer | New-Neo4jNode -Label Server -Passthru
 Set-Neo4jNode -Label Server -Hash @{ Name = 'psbot01'} -InputObject @{
     CanonicalName = 'ad.contoso.com/Test/psbot01'
     ExtraData = 'why would you even add this!'
-} -Verbose
+}
 
 # See what we have
 Invoke-Neo4jQuery -Query @"

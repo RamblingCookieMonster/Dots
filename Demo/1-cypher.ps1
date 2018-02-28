@@ -1,20 +1,18 @@
 ﻿# https://neo4j.com/docs/cypher-refcard/current/
 # Many other hand references
+
 Clear-Neo4j
-
-
-
 <#
 
 Nodes and relationships
 
-()                   Any node
-(:Server)            Any node labeled server
-(s:Server)           $s = any node labeled server
+()                  Nodes
+(:Server)           All nodes labeled server
+(s:Server)          $s = All nodes labeled server
 
-[]                   Any relationship
-[r:DependsOn]->(s)   $r = Any relationship with a DependsOn type.  $s = any node with a dependency
-
+[]                  Relationships
+[r:DependsOn]->(s)  $r = Any relationship with a DependsOn type.
+                    $s = any node with a dependency
 
 #>
 
@@ -80,8 +78,11 @@ RETURN {
 }
 "@ -as Row
 
+
+# Clean up
 Invoke-Neo4jQuery -Query @"
 MATCH (n)
 DETACH DELETE n
 "@
-# Clear-Neo4j also kills indexes and constraints
+
+Clear-Neo4j # Does the same, also kills indexes and constraints

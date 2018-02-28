@@ -7,7 +7,7 @@ Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://cho
 choco install neo4j-community -y
 
 # Install psneo4j
-Install-Module PSNeo4j
+Install-Module PSNeo4j -Force
 
 # Set initial password and psneo4j config
 $Password = ConvertTo-SecureString -String "myneo4jpassword!" -AsPlainText -Force

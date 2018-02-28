@@ -12,3 +12,6 @@ Connect-TheDots -WhatIf -Include ADComputers
 Connect-TheDots -WhatIf -Scope Manual
 
 Connect-TheDots -Confirm:$False
+
+
+Clear-Neo4j
