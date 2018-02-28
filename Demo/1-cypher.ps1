@@ -1,9 +1,17 @@
-﻿# https://neo4j.com/docs/cypher-refcard/current/
+﻿# Cypher is a
+    # declarative,
+    # SQL-inspired language
+# for describing patterns in graphs
+# visually using an ascii-art syntax
+
+# https://neo4j.com/developer/cypher-query-language/
+# https://neo4j.com/docs/cypher-refcard/current/
+# https://neo4j.com/developer/guide-sql-to-cypher/ Northwind Relational DB to Neo4j
+# https://neo4j.com/docs/developer-manual/current/cypher/
 # Many other hand references
 
-Clear-Neo4j
-<#
 
+<#
 Nodes and relationships
 
 ()                  Nodes
@@ -15,6 +23,8 @@ Nodes and relationships
                     $s = any node with a dependency
 
 #>
+
+Clear-Neo4j
 
 Invoke-Neo4jQuery -Query @"
 MATCH (n)
