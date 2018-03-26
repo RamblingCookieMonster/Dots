@@ -173,3 +173,24 @@ function Get-ScheduledTasks {
         Description = 'Watch for PSBot presence -ne active'
     }
 }
+
+function Get-SqlInstance {
+    # Simple:
+        # https://gallery.technet.microsoft.com/scriptcenter/Get-SQLInstance-9a3245a0
+        # Borrowed from Boe's example data
+    # More complex:
+        # Various dbatools for querying instance info, including https://dbatools.io/functions/get-dbasqlinstanceproperty/
+    [pscustomobject]@{
+        ComputerName = 'mssql01'
+        FullName = 'SQLCLU\MSSQLSERVER'
+        Instance = 'MSSQLSERVER'
+        SqlServer = 'SQLCLU'
+        Version = '10.53.6000.34'
+        Splevel = 3
+        Clustered = $False
+        Installpath = 'C:\Program Files\Microsoft SQL Server\MSSQL10_50.MSSQLSERVER\MSSQL'
+        Datapath = 'D:\MSSQL10_50.MSSQLSERVER\MSSQL'
+        Caption = 'SQL Server 2008 R2'
+        BackupDirectory = 'F:\MSSQL10_50.MSSQLSERVER\MSSQL\Backup'
+    }
+}
