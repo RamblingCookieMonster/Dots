@@ -4,28 +4,35 @@ $Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -ErrorAction Silen
 $ModuleRoot = $PSScriptRoot
 
 # Find user defined paths
-Get-Content $ModuleRoot\dots.conf |
-    Where-Object {$_ -match "^\s*ScriptsPath\s*=\s*|^\s*ConfPath\s*=\s*|^\s*DataPath\s*=\s*"} |
-    Foreach-Object {
-        $Name = ($_ -split '=')[0].trim()
-        $Value = ($_ -split '=')[1].trim()
+$ConfData = Get-Content $ModuleRoot\dots.conf
+'ScriptsPath', 'ConfPath', 'DataPath' | Foreach-Object {
+    $PathType = $_
+    #Check conf data for paths
+    $Line = $ConfData | Where-Object {$_ -match "^\s*$PathType\s*=\s*"}
+    if($Line){
+        $Value = ($Line -split '=')[1].trim()
         $Value = $Value -replace '\$ModuleRoot', $ModuleRoot
         $Value = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Value)
-        Set-Variable -Name $Name -Value $Value -Force
+        Set-Variable -Name $PathType -Value $Value -Force
     }
-# No, or bad user defined paths?
-foreach($Folder in 'Conf', 'Data', 'Scripts') {
-    $Path = $null
-    $Path = Get-Variable -Name "${Folder}Path" -ValueOnly -ErrorAction SilentlyContinue
+    # Override paths with env vars
+    if($Value = (Get-Item ENV:$PathType).Value) {
+        $Value = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Value)
+        Set-Variable -Name $PathType -Value $Value -Force
+    }
+
+    # Check for nonexistent paths
+    $Path = Get-Variable -Name $PathType -ValueOnly -ErrorAction SilentlyContinue
     if(-not $Path) {
-        $Path = Join-Path $ModuleRoot "${Folder}Path"
-        Set-Variable -Name "${Folder}Path" -Value $Path
+        $Path = Join-Path $ModuleRoot $PathType
+        Set-Variable -Name $PathType -Value $Path -Force
     }
     if(-not (Test-Path $Path -PathType Container)) {
-        throw "The ${Folder}Path [$Path] does not exist.`nCreate this, or fix it in your [$ModuleRoot\dots.conf]"
+        throw "The [$PathType] [$Path] does not exist.`nCreate this, or fix it in your [$ModuleRoot\dots.conf]"
     }
 }
-# Resolve paths we're use somewhat often
+
+# Resolve paths we'll use somewhat often
 $AutoPath = (Resolve-Path "$ScriptsPath\Auto").Path
 $ManualPath = (Resolve-Path "$ScriptsPath\Manual").Path
 $SortPath = Join-Path $ConfPath sort.txt
