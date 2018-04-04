@@ -16,7 +16,7 @@ $ConfData = Get-Content $ModuleRoot\dots.conf
         Set-Variable -Name $PathType -Value $Value -Force
     }
     # Override paths with env vars
-    if($Value = (Get-Item ENV:$PathType).Value) {
+    if($Value = (Get-Item ENV:$PathType -ErrorAction SilentlyContinue).Value) {
         $Value = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Value)
         Set-Variable -Name $PathType -Value $Value -Force
     }
@@ -33,8 +33,8 @@ $ConfData = Get-Content $ModuleRoot\dots.conf
 }
 
 # Resolve paths we'll use somewhat often
-$AutoPath = (Resolve-Path "$ScriptsPath\Auto").Path
-$ManualPath = (Resolve-Path "$ScriptsPath\Manual").Path
+$ExternalSourcesScriptsPath = (Resolve-Path "$ScriptsPath\ExternalSources").Path
+$DotsSourcesScriptPath = (Resolve-Path "$ScriptsPath\DotsSources").Path
 $SortPath = Join-Path $ConfPath sort.txt
 
 #Dot source the files

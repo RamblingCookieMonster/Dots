@@ -2,7 +2,7 @@ function Connect-TheDots {
 [cmdletbinding( SupportsShouldProcess = $True,
                 ConfirmImpact='High' )]
     param(
-        [validateset('Auto', 'Manual')]
+        [validateset('ExternalSources', 'DotsSources')]
         [string]$Scope,
         [string[]]$Include,
         [string[]]$Exclude,
@@ -13,13 +13,13 @@ function Connect-TheDots {
     $ConfirmAll = $false
     $Scripts = Get-ChildItem $ScriptsPath -Recurse -Include *.ps1
     Write-Verbose "Found scripts $($Scripts.FullName | Out-String)"
-    if($Scope -eq 'Auto') {
-        $Scripts = $Scripts | Where-Object {$_.FullName -like "$AutoPath*"}
-        Write-Verbose "Including only auto scripts: $($Scripts.FullName | Out-String)"
+    if($Scope -eq 'ExternalSources') {
+        $Scripts = $Scripts | Where-Object {$_.FullName -like "$ExternalSourcesScriptsPath*"}
+        Write-Verbose "Including only ExternalSources scripts: $($Scripts.FullName | Out-String)"
     }
-    if($Scope -eq 'Manual') {
-        $Scripts = $Scripts | Where-Object {$_.FullName -like "$ManualPath*" }
-        Write-Verbose "Including only manual scripts: $($Scripts.FullName | Out-String)"
+    if($Scope -eq 'DotsSources') {
+        $Scripts = $Scripts | Where-Object {$_.FullName -like "$DotsSourcesScriptsPath*" }
+        Write-Verbose "Including only DotsSources scripts: $($Scripts.FullName | Out-String)"
     }
     if($Include) {
         $Scripts = foreach($Script in $Scripts) {

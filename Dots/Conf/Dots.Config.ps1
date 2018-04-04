@@ -1,4 +1,6 @@
 $TestMode = $True
 $CMDBPrefix = 'AIDB'
-$ServerUnique = "${CMDBPrefix}HostName"
 $Date = Get-Date
+
+# Used for correlating servers
+$ServerUnique = "${CMDBPrefix}HostName"

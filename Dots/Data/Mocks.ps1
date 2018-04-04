@@ -112,7 +112,7 @@ function Get-ADUser {
         userprincipalname = 'wframe@ad.contoso.com'
         title = 'sysadmin'
         mail = 'wframe@contoso.com'
-        sid = 'S-1-5-21-1004336348-1177238915-682003330-11111'
+        sid = @{value = 'S-1-5-21-1004336348-1177238915-682003330-11111'}
         distinguishedname = 'CN=wframe,OU=Domain Users,DC=ad,DC=contoso,DC=com'
         memberof = @('CN=computer-admin-psbot01,OU=groups,OU=tier 1,DC=ad,DC=contoso,DC=com', 'CN=Domain Users,CN=Users,DC=ad,DC=contoso,DC=com', 'CN=psbot-users,OU=Domain Groups,DC=ad,DC=contoso,DC=com')
         lastlogondate = [datetime]::Now
@@ -122,7 +122,7 @@ function Get-ADUser {
         userprincipalname = 'wframet0@ad.contoso.com'
         title = 'sysadmin'
         mail = ''
-        sid = 'S-1-5-21-1004336348-1177238915-682003330-22222'
+        sid = @{value='S-1-5-21-1004336348-1177238915-682003330-22222'}
         distinguishedname = 'CN=wframet0,OU=Domain Users,DC=ad,DC=contoso,DC=com'
         memberof = @('CN=Domain Admins,CN=Users,DC=ad,DC=contoso,DC=com', 'CN=Domain Users,CN=Users,DC=ad,DC=contoso,DC=com')
         lastlogondate = [datetime]::Now
@@ -154,6 +154,10 @@ function Get-ADGroup {
         distinguishedname = 'CN=psbot-users,OU=Domain Groups,DC=ad,DC=contoso,DC=com'
         SID = 'S-1-5-21-1004336348-1177238915-682003330-222222'
     }
+}
+
+function Get-ADGroupMembers {
+
 }
 
 function Get-ScheduledTasks {
@@ -192,5 +196,51 @@ function Get-SqlInstance {
         Datapath = 'D:\MSSQL10_50.MSSQLSERVER\MSSQL'
         Caption = 'SQL Server 2008 R2'
         BackupDirectory = 'F:\MSSQL10_50.MSSQLSERVER\MSSQL\Backup'
+    }
+}
+
+function Get-Disk {
+    [pscustomobject]@{
+        DeviceID = ''
+        ComputerName = ''
+        Path = ''
+        VolumeName = ''
+        SCSITarget = ''
+        SCSIController = ''
+        DataStore = ''
+        Type = ''
+        StorageFormat = ''
+    }
+}
+
+
+function Get-ServerInfo {
+    [pscustomobject]@{
+        ComputerName = ''
+        OSInstallDate = ''
+        UACSettings = ''
+        LastBootupTime = ''
+        Manufacturer = ''
+        Model = ''
+        Serial = ''
+        OS = ''
+        OSServicePack = ''
+        PageFileBaseSize = ''
+        PageFileMaxSize = ''
+        PageFileMaxUse = ''
+        IPv6DisabledComponents = ''
+    }
+}
+
+function Get-ServiceInfo {
+    [pscustomobject]@{
+        ComputerName = ''
+        Name = ''
+        Caption = ''
+        StartName = ''
+        StartMode = ''
+        State = ''
+        PathName = ''
+        DesktopInteract = ''
     }
 }

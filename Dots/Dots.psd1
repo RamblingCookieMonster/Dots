@@ -18,16 +18,16 @@ ModuleVersion = '0.0.1'
 # CompatiblePSEditions = @()
 
 # ID used to uniquely identify this module
-GUID = '3dca66f9-5ee6-4613-bb57-d7527629b7ec'
+GUID = 'c3865322-a320-462a-b4b3-0439bb9f2b14'
 
 # Author of this module
 Author = 'Warren Frame'
 
 # Company or vendor of this module
-CompanyName = 'Unknown'
+# CompanyName = 'Unknown'
 
 # Copyright statement for this module
-Copyright = '(c) Warren Frame. All rights reserved.'
+Copyright = '(c) 2018 Warren Frame. All rights reserved.'
 
 # Description of the functionality provided by this module
 Description = 'Simple PowerShell and Neo4j Based CMDB project'
@@ -45,7 +45,10 @@ PowerShellVersion = '5.0'
 # ProcessorArchitecture = ''
 
 # Modules that must be imported into the global environment prior to importing this module
-RequiredModules = @( 'PSNeo4j' )
+RequiredModules = @(
+    @{ModuleName="PSNeo4j"; ModuleVersion="0.0.23"},
+    @{ModuleName="powershell-yaml"; ModuleVersion="0.3.2"}
+)
 
 # Format files (.ps1xml) to be loaded when importing this module
 # FormatsToProcess = @()

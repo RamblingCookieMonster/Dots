@@ -33,7 +33,7 @@ $ConfigPath = Get-ConfigPath $PSCommandPath
 if($ConfigPath) {
     . $ConfigPath
 }
-'Excludes', 'Transforms' | ForEach-Object {
+$PSBoundParameters.Keys | ForEach-Object {
     if($PSBoundParameters.ContainsKey($_)) {
         Set-Variable -Name $_ -Value $PSBoundParameters[$_] -Force
     }
@@ -54,7 +54,7 @@ $Nodes = Foreach($Node in $Nodes) {
 $TotalCount = $Nodes.count
 $Count = 0
 Foreach($Node in $Nodes) {
-    Write-Progress -Activity "Updating Neo4j" -Status  "Adding $($Node.$MergeProperty)" -PercentComplete (($Count / $TotalCount)*100)
+    Write-Progress -Activity "Updating Neo4j" -Status  "Adding $($Node.$Unique) computers" -PercentComplete (($Count / $TotalCount)*100)
     $Count++
-    Set-Neo4jNode -Label $Label -Hash @{$ServerUnique = ($Node."${Prefix}${MergeProperty}").ToLower()} -InputObject $Node
+    Set-Neo4jNode -Label $Label -Hash @{$ServerUnique = ($Node.$Unique).ToLower()} -InputObject $Node
 }
