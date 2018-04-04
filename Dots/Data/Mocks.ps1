@@ -134,30 +134,37 @@ function Get-ADGroup {
         samaccountname = 'domain admins'
         name = 'domain admins'
         distinguishedname = 'CN=Domain Admins,CN=Users,DC=ad,DC=contoso,DC=com'
-        SID = 'S-1-5-21-1004336348-1177238915-682003330-512'
+        SID = @{value='S-1-5-21-1004336348-1177238915-682003330-512'}
     },
     [pscustomobject]@{
         samaccountname = 'domain users'
         name = 'domain users'
         distinguishedname = 'CN=Domain Users,CN=Users,DC=ad,DC=contoso,DC=com'
-        SID = 'S-1-5-21-1004336348-1177238915-682003330-513'
+        SID = @{value='S-1-5-21-1004336348-1177238915-682003330-513'}
     },
     [pscustomobject]@{
         samaccountname = 'computer-admin-psbot01'
         name = 'computer-admin-psbot01'
         distinguishedname = 'CN=computer-admin-psbot01,OU=groups,OU=tier 1,DC=ad,DC=contoso,DC=com'
-        SID = 'S-1-5-21-1004336348-1177238915-682003330-111111'
+        managedby = 'CN=wframe,OU=Domain Users,DC=ad,DC=contoso,DC=com'
+        SID = @{value='S-1-5-21-1004336348-1177238915-682003330-111111'}
     },
     [pscustomobject]@{
         samaccountname = 'psbot-users'
         name = 'psbot-users'
         distinguishedname = 'CN=psbot-users,OU=Domain Groups,DC=ad,DC=contoso,DC=com'
-        SID = 'S-1-5-21-1004336348-1177238915-682003330-222222'
+        managedby = 'CN=wframe,OU=Domain Users,DC=ad,DC=contoso,DC=com'
+        SID = @{value='S-1-5-21-1004336348-1177238915-682003330-222222'}
     }
 }
 
-function Get-ADGroupMembers {
-
+function ActiveDirectory\Get-ADObject {
+    param($Identity, $Properties)
+    if($Identity -eq 'CN=wframe,OU=Domain Users,DC=ad,DC=contoso,DC=com') {
+        [pscustomobject]@{
+            samaccountname = 'wframe'
+        }
+    }
 }
 
 function Get-ScheduledTasks {

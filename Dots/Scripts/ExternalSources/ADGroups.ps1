@@ -2,24 +2,18 @@
 param(
     [string]$Prefix = 'AD',
     [string]$MergeProperty = 'SID',
-    [string]$Label = 'User',
+    [string]$Label = 'Group',
     [string[]]$Properties = @(
         'SamAccountName',
         'CN',
         'CanonicalName',
-        'DisplayName',
-        'Company',
-        'Department',
-        'Title',
-        'givenName',
-        'surname',
-        'mail',
-        'uidNumber',
+        'Name',
         'gidNumber',
         'SID',
-        'LastLogonDate'
+        'ManagedBy',
+        'Description'
     ),
-    [string[]]$Excludes = @('CanonicalName', 'CN'),
+    [string[]]$Excludes = @('CanonicalName', 'CN', 'ManagedBy'),
     [object[]]$Transforms
 )
 # Dot source so module import is available in this scope
@@ -46,7 +40,7 @@ $PSBoundParameters.Keys | ForEach-Object {
     Write-Verbose "$_ is $(Get-Variable -Name $_ -ValueOnly | Out-String)"
 }
 
-$Nodes = Get-ADUser -Filter 'enabled -eq $true' -Properties $Properties |
+$Nodes = Get-ADGroup -Filter * -Properties $Properties |
     Select-Object -Property $Properties |
     Select-Object -Property $Transforms -ExcludeProperty $Excludes
 
