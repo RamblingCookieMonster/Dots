@@ -1,4 +1,5 @@
-# go as simple and risky as choco install from the public repo, to HA neo4j enterprise in containers
+# curl|bash chocolatey and install from public repo
+# not really appropriate for a production environment!
 
 # Bootstrap chocolatey, install neo4j with defaults
 Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))

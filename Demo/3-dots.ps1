@@ -1,14 +1,13 @@
 ﻿# This is in the 'get it working' stage - will change significantly...
 $DotsPath = '~/sc/Dots/Dots'
 
-Invoke-PSDepend -Path $DotsPath/.requirements.psd1 -Install -Import -Force
 Import-Module "/Users/wframe/sc/Dots/Dots" -Force
 
 # Install Dots
 # Check configurations:
   # ModulePath\Dots\dots.conf  : Tells dots where scripts, data, and conf files are
 
-  # ScriptsPath (in dots.conf) : Tells dots where to find scripts (manual or auto)
+  # ScriptsPath (in dots.conf) : Tells dots where to find scripts (ExternalSources or DotsSources)
   # ConfPath (in dots.conf)    : Stores 'config' scripts (~params for ScriptPath scripts, with logic.  ugly af but works for me, sorry)
   # DataPath (in dots.conf)    : Tells dots where to find yaml data for manual scripts
 

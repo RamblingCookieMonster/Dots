@@ -51,9 +51,9 @@ $Nodes = foreach($Node in $Nodes) {
     Write-Progress -Activity "Getting Puppet info" -Status  "Getting $($Node.Name)" -PercentComplete (($Count / $TotalCount)*100)
     $Count++
     Get-PDBNodeFact -CertName $Node.certname |
-        Select -Property $Properties |
-        Select -Property $Transforms |
-        Select -Property * -ExcludeProperty $Excludes
+        Select-Object -Property $Properties |
+        Select-Object -Property $Transforms |
+        Select-Object -Property * -ExcludeProperty $Excludes
 }
 
 $Nodes = Foreach($Node in $Nodes) {
