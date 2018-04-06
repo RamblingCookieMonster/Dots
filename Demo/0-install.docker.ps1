@@ -1,7 +1,7 @@
 # Not intended as a generic works-for-everyone approach
 # Handy for giving quick demos or spinning up an instance for testing
 
-# I'm using docker-machine, other envs won't need this
+# I'm using docker-machine, other envs won't need this - https://docs.docker.com/toolbox/
 docker-machine create --driver virtualbox default
 docker-machine env --shell=powershell default | Invoke-Expression
 
@@ -19,11 +19,6 @@ docker run --name dots `
 docker-machine ip
 # browse: http://192.168.99.100:7474/browser/
 
-# tear down
-docker kill dots
-docker rm dots
-Remove-Item /Users/wframe/neo4j/dots -Recurse -Force
-
 # Install psneo4j
 Install-Module PSNeo4j -Force
 Import-Module PSNeo4j -Force
@@ -40,3 +35,8 @@ Set-PSNeo4jConfiguration -Credential $Credential -BaseUri 'http://192.168.99.100
 
 Get-Neo4jUser
 Get-Neo4jActiveConfig | Format-List
+
+# tear down
+docker kill dots
+docker rm dots
+Remove-Item /Users/wframe/neo4j/dots -Recurse -Force

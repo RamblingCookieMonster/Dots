@@ -24,43 +24,9 @@ Nodes and relationships
 
 #>
 
-Clear-Neo4j
+# We pre-populated Dots, more on that later
 
-Invoke-Neo4jQuery -Query @"
-MATCH (n)
-RETURN n
-"@
-
-# We want unique node names
-New-Neo4jConstraint -Label Server -Property name -Unique
-Get-Neo4jConstraint
-
-# Create nodes
-Invoke-Neo4jQuery -Query @"
-CREATE (n:Server { name: 'dc01'})
-RETURN n
-"@
-Invoke-Neo4jQuery -Query @"
-CREATE (n:Server { name: {name} })
-RETURN n
-"@ -Parameters @{name = 'dc02'} #Parameterize queries
-
-Invoke-Neo4jQuery -Query @"
-CREATE (n:Service { name: {name} })
-RETURN n
-"@ -Parameters @{name = 'Active Directory'}
-
-# Create relationships
-Invoke-Neo4jQuery -Query @"
-MATCH (s:Server), (svc:Service)
-WHERE s.name =~ 'dc.*' AND
-      svc.name = 'Active Directory'
-CREATE (s)-[r:IsPartOf { load_balanced: true }]->(svc)
-RETURN r
-"@
-
-# Query
-# all nodes:
+# all nodes
 Invoke-Neo4jQuery -Query @"
 MATCH (n)
 RETURN n
@@ -75,16 +41,16 @@ RETURN s,r,svc
 # Examples building different output
 Invoke-Neo4jQuery -Query @"
 MATCH (s:Server)-[r:IsPartOf]->(svc:Service)
-RETURN s.name AS ServerName,
+RETURN s.AIDBHostName AS ComputerName,
        type(r) AS Relationship,
        svc.name AS ServiceName
-"@ -As ParsedColumns | Format-List -Force
+"@ -As ParsedColumns | Format-Table -AutoSize
 
 Invoke-Neo4jQuery -Query @"
 MATCH (s:Server)-[r:IsPartOf]->(svc:Service)
 RETURN {
     ServiceName: svc.name,
-    Servers: collect(s.name)
+    Servers: collect(s.AIDBHostName)
 }
 "@ -as Row
 
