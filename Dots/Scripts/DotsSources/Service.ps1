@@ -1,27 +1,22 @@
+[cmdletbinding()]
+param(
+    $RelationshipTypes = @('Uses', 'Admins', 'Owns', 'Owns_Data')
+)
+
 <#
-    Build up services and principal-owns-service relationships
+    Build up services and principal relationships
     Delete all existing data beforehand
 #>
-Invoke-Neo4jQuery -Query "MATCH (s:Service) DETACH DELETE s"
-Invoke-Neo4jQuery -Query "MATCH ()-[r:Owns]->() DELETE r"
-Invoke-Neo4jQuery -Query "MATCH ()-[r:Uses]->() DELETE r"
-
-"`n###############"
-"Running $($MyInvocation.MyCommand.Name )"
-"###############"
-$files = Get-ChildItem $DataPath\Service\*.yml -File | Where-Object {$_.BaseName -notmatch '^[0-9].*Template.*'}
-
-function Get-AccountLabel {
-    [cmdletbinding()]
-    param($Name)
-    $Account = $null
-    $Account = Get-ADSIObject $Name -Property samaccountname, objectclass
-    if($Account.objectclass -like 'user'){'Account'}
-    elseif($Account.objectclass -like 'group'){'Group'}
-    else {
-        write-warning "Could not find owner [$($OwnerHash.owner)] in AD"
-    }
+foreach($RelationshipType in $RelationshipTypes) {
+    Invoke-Neo4jQuery -Query "MATCH ()-[r:$RelationshipType]->() DELETE r"
 }
+Invoke-Neo4jQuery -Query "MATCH (s:Service) DETACH DELETE s"
+
+$ScriptName = $MyInvocation.MyCommand.Name -replace '.ps1$'
+"`n###############"
+"Running $ScriptName"
+"###############"
+$files = Get-ChildItem $DataPath\$ScriptName\*.yml -File | Where-Object {$_.BaseName -notmatch '^[0-9].*Template.*'}
 
 foreach($file in $files) {
     "### PARSING ### $($file.fullname)"
@@ -30,11 +25,14 @@ foreach($file in $files) {
     $namekey = $file.basename
     # Extract reserved keys that aren't a part of the service
     $Sleep = $null
-    [string[]]$Owner = if($data.ContainsKey('owner')) {
-        $data['owner']
-        [void]$data.remove('owner')
-        $Sleep = $True
-    } else {$null}
+    $PrincipalData = @{}
+    foreach($RelationshipType in $RelationshipTypes){
+        if($data.ContainsKey($RelationshipType)){
+            $PrincipalData.add($RelationshipType, $data[$RelationshipType])
+            [void]$data.remove($RelationshipType)
+            $Sleep = $True
+        }
+    }
 
     # Create the service
     $Output = Set-Neo4jNode -Label Service -Hash @{name_key = $namekey} -InputObject $data -Passthru
@@ -45,51 +43,29 @@ foreach($file in $files) {
                    -Specific "service $namekey" `
                    -Output $Output
 
-    # Create relationships
-    if($Sleep) {Start-Sleep -Milliseconds 300}
-    if($Owner) {
-        foreach($Account in $Owner) {
-            $Label = Get-AccountLabel -Name $Account
-            $LeftQuery = "MATCH (left:$Label {ADSamAccountName: {ADSamAccountName}})"
-            $SQLParams = @{}
-            $SQLParams.Add('ADSamAccountName', $Account)
-            $Params = @{
-                Type = 'Owns'
-                LeftQuery = $LeftQuery
-                Passthru = $True
-            }
-            $Right = "MATCH (right:Service {name_key: {name_key}})"
-            $SQLParams.add('name_key', $namekey)
-            $Output = New-Neo4jRelationship @Params -RightQuery $Right -Parameters $SQLParams
-            Test-BadOutput -Ingestor $MyInvocation.MyCommand.Name `
-                           -YamFile $File `
-                           -DataHash $($Data | Out-String) `
-                           -DataKey $namekey `
-                           -Specific "Owner $Account, service $namekey" `
-                           -Output $Output
+    foreach($RelationshipType in $RelationshipTypes){
+        if(-not $PrincipalData.ContainsKey($RelationshipType)) {
+            continue
         }
-    }
-    if($Access) {
-        foreach($Account in $Access) {
-            $Label = Get-AccountLabel -Name $Account
-            $LeftQuery = "MATCH (left:$Label {ADSamAccountName: {ADSamAccountName}})"
-            $SQLParams = @{}
-            $SQLParams.Add('ADSamAccountName', $Account)
-            $Params = @{
-                Type = 'Uses'
-                LeftQuery = $LeftQuery
-                Passthru = $true
-            }
-            $Right = "MATCH (right:Service {name_key: {name_key}})"
-            $SQLParams.add('name_key', $namekey)
 
-            $Params.Type = 'Uses'
-            $Output = New-Neo4jRelationship @Params -RightQuery $Right -Parameters $SQLParams
+        $Params = @{
+            RightLabel = 'Service'
+            RightHash = @{name_key = $namekey}
+            Type = $RelationshipType
+        }
+        $Principals = $PrincipalData[$RelationshipType]
+        foreach($Principal in $Principals.Keys) {
+            $LeftParams = @{
+                LeftLabel = Get-PrincipalLabel -Name $Principal
+                LeftHash = @{ADSamAccountName = $Principal}
+                Properties = $Principals[$Principal]
+            }
+            $Output = New-Neo4jRelationship @LeftParams @Params -Passthru -verbose
             Test-BadOutput -Ingestor $MyInvocation.MyCommand.Name `
                            -YamFile $File `
-                           -DataHash $($Data | Out-String) `
+                           -DataHash $($PrincipalData | Out-String) `
                            -DataKey $namekey `
-                           -Specific "Uses system $Account, service $namekey" `
+                           -Specific "principal $Principal [:$RelationshipType] service $namekey" `
                            -Output $Output
         }
     }

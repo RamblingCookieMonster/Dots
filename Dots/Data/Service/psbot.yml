@@ -3,3 +3,19 @@ keywords: Slack bot, chatops, chat, poshbot, powershell
 description: poshbot based Slack bot
 security_tier: 2
 outage_tier: 2
+
+Uses:
+  psbot-users:
+    description: Uses PSBot for various operations
+  psbot-admins:
+    description: Authors and uses PSBot plugins, integrations, and other components
+
+Admins:
+  psbot-admins:
+    description: Authors and uses PSBot plugins, integrations, and other components
+  computer-admin-psbot01:
+    description: Administrative access and operations for psbot servers
+
+Owns:
+  aboss:
+    description: Systems/service owner

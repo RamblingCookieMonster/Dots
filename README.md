@@ -29,7 +29,7 @@ We can also define data where Dots is the source of truth:
 * Install neo4j somewhere
   * [Chocolatey](Demo/0-install.chocolatey.ps1), [docker](0-install.docker.ps1) examples
   * Glenn's references on [chocolatey](https://glennsarti.github.io/blog/graph-all-the-powershell-things/) or [a Neo4j Enterprise cluster in docker for Windows](https://glennsarti.github.io/blog/neo4j-nano-containers/).
-  * Anything else.  Neo4j and Dots don't require Windows.
+  * Anything else.  Neo4j and Dots don't require Windows
 
 * Install and configure Dots
 

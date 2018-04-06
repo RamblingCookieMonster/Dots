@@ -1,0 +1,5 @@
+name: Slack
+keywords: chatops, chat, slack, message, communication
+description: team communications and some operations via bots and integrations
+security_tier: 2
+outage_tier: 1

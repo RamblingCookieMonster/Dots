@@ -4,3 +4,15 @@ keywords: ldap, ldaps, kerberos, identity, authentication
 description: identity, authentication, and related services
 security_tier: 0
 outage_tier: 0
+
+Uses:
+  'Domain Users':
+    description: Everyone uses AD
+
+Admins:
+  'Domain Admins':
+    description: All things AD!
+
+Owns:
+  aboss:
+    description: Systems/service owner

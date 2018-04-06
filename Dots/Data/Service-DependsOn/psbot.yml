@@ -11,4 +11,14 @@ names:
   properties:
     outage_impact: No name resolution
 
+config:
+  services:
+    - dsc
+  properties:
+    outage_impact: No configuration updates
 
+backend:
+  services:
+    - slack
+  properties:
+    outage_impact: No bot!

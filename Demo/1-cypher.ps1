@@ -54,11 +54,14 @@ RETURN {
 }
 "@ -as Row
 
-
 # Clean up
 Invoke-Neo4jQuery -Query @"
 MATCH (n)
 DETACH DELETE n
 "@
 
+# Browse?
+# http://192.168.99.100:7474/browser/
+
 Clear-Neo4j # Does the same, also kills indexes and constraints
+
