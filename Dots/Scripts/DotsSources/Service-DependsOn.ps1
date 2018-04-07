@@ -6,7 +6,7 @@ $ScriptName = $MyInvocation.MyCommand.Name -replace '.ps1$'
 "`n###############"
 "Running $ScriptName )"
 "###############"
-$files = Get-ChildItem $DataPath\$ScriptName\*.yml -File | Where-Object {$_.BaseName -notmatch '^[0-9].*Template$'}
+$files = Get-ChildItem $script:DataPath\$ScriptName\*.yml -File | Where-Object {$_.BaseName -notmatch '^[0-9].*Template$'}
 foreach($file in $files) {
     "### PARSING ### $($file.fullname)"
     $yaml = Get-Content $file.fullname -Raw

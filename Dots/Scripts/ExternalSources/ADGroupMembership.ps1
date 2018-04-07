@@ -2,6 +2,14 @@
 param(
 )
 
+# Dot source so module import is available in this scope
+if($Script:TestMode) {
+    . $(Join-Path $Script:DataPath Mocks.ps1)
+}
+else {
+    . Import-RequiredModule ActiveDirectory -ErrorAction Stop
+}
+
 $Groups = Get-ADGroup -Properties ManagedBy, MemberOf -Filter * | Select-Object DistinguishedName, SID, Name, ManagedBy, MemberOf
 $Users = Get-ADUser -Properties MemberOf -Filter 'enabled -eq $true' | Select-Object DistinguishedName, SID, MemberOf
 $SIDMap = @{}

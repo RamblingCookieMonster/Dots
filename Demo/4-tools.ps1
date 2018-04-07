@@ -5,20 +5,20 @@
 
 # Don't read into this
 # you can get much fancier with parameters and query building
-function Get-AIDBServer {
+function Get-DotsServer {
     param ($Hostname = '.*')
     Invoke-Neo4jQuery -Query "MATCH (n:Server)
-                              WHERE n.AIDBHostName =~ {Hostname}
+                              WHERE n.DotsHostname =~ {Hostname}
                               RETURN n" `
                       -Parameters @{
                           Hostname = $Hostname
                       }
 }
 
-Get-AIDBServer | Select AIDB*, PDB*, AD*
+Get-DotsServer | Select Dots*, PDB*, AD*
 
 
-function Get-AIDBService {
+function Get-DotsService {
     param ($Name = '.*')
     Invoke-Neo4jQuery -Query "MATCH (n:Service)
                               WHERE n.name =~ {name} OR
@@ -29,9 +29,9 @@ function Get-AIDBService {
                       }
 }
 
-Get-AIDBService
+Get-DotsService
 
-function Get-AIDBDependentServices {
+function Get-DotsDependentServices {
     param ($Name)
     Invoke-Neo4jQuery -Query "MATCH (x)-[r:DependsOn*]->(s:Service)
                               WHERE s.name = {name}
@@ -41,15 +41,15 @@ function Get-AIDBDependentServices {
                       } -as Row
 }
 
-Get-AIDBDependentServices -Name 'Active Directory'
+Get-DotsDependentServices -Name 'Active Directory'
 # hmm?  why is AD in there?
 
 # etc!  You'd be surprised how handy a database of servers alone is...
 
-# Get-AIDBServiceOutageImpact
-# Get-AIDBServerOutageImpact
-# Get-AIDBServiceUsers
-# Get-AIDBScheduledTask
-# Get-AIDBMSSQLInstance
-# Get-AIDBMSSQLDatabase
+# Get-DotsServiceOutageImpact
+# Get-DotsServerOutageImpact
+# Get-DotsServiceUsers
+# Get-DotsScheduledTask
+# Get-DotsMSSQLInstance
+# Get-DotsMSSQLDatabase
 # etc.

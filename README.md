@@ -77,7 +77,7 @@ Invoke-Neo4jQuery 'MATCH (n:Server) RETURN n'
 # Show server-ispartof-service map
 Invoke-Neo4jQuery -Query @"
 MATCH (s:Server)-[r:IsPartOf]->(svc:Service)
-RETURN s.AIDBHostName AS ComputerName,
+RETURN s.DotsHostname AS ComputerName,
        type(r) AS Relationship,
        svc.name AS ServiceName
 "@ -As ParsedColumns | Format-Table -AutoSize
@@ -87,7 +87,7 @@ Invoke-Neo4jQuery -Query @"
 MATCH (s:Server)-[r:IsPartOf]->(svc:Service)
 RETURN {
     ServiceName: svc.name,
-    Servers: collect(s.AIDBHostName)
+    Servers: collect(s.DotsHostname)
 }
 "@ -as Row
 
@@ -97,12 +97,10 @@ Clear-Neo4j
 
 ## What do I need to configure?
 
-* `Dots\dots.conf` points to three paths.   See the file for in depth explanations
-  * `ScriptsPath`  default: `Dots\Scripts`   The scripts that query ExternalSources and DotsSources live here
-  * `DataPath`     default: `Dots\Data`      DotsSources yaml data lives here (e.g. service definitions)
-  * `ConfPath`     default: `Dots\Conf`      Various configuration files and scripts live here
-    * `Dots.Config.ps1`  Global dots configurations (e.g. prefix for data owned by Dots)
-    * `sort.txt`         Controls order of ingestion (items not included run last)
+* `Dots\dots.conf` points to three paths.        See the file for in depth explanations
+  * `ScriptsPath`  default: `Dots\Scripts`       The scripts that query ExternalSources and DotsSources live here
+  * `DataPath`     default: `Dots\Data`          DotsSources yaml data lives here (e.g. service definitions)
+* `Set-DotsConfig` default: See `Get-DotsConfig` Various Dots configurations
 
 ## Does this support <insert technology>?
 

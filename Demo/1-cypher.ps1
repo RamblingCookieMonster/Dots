@@ -41,7 +41,7 @@ RETURN s,r,svc
 # Examples building different output
 Invoke-Neo4jQuery -Query @"
 MATCH (s:Server)-[r:IsPartOf]->(svc:Service)
-RETURN s.AIDBHostName AS ComputerName,
+RETURN s.DotsHostname AS ComputerName,
        type(r) AS Relationship,
        svc.name AS ServiceName
 "@ -As ParsedColumns | Format-Table -AutoSize
@@ -50,7 +50,7 @@ Invoke-Neo4jQuery -Query @"
 MATCH (s:Server)-[r:IsPartOf]->(svc:Service)
 RETURN {
     ServiceName: svc.name,
-    Servers: collect(s.AIDBHostName)
+    Servers: collect(s.DotsHostname)
 }
 "@ -as Row
 

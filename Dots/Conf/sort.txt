@@ -1,6 +1,0 @@
-ADComputers
-ADUsers
-ADGroups
-PuppetDB
-Service
-Service-DependsOn

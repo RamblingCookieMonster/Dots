@@ -45,12 +45,9 @@ function Connect-TheDots {
         Write-Verbose "Excluding specified scripts: $($Scripts.FullName | Out-String)"
     }
     # Sort by file first, then dependencies (dependencies should override)
-    if(Test-Path $SortPath) {
-        $Order = Get-Content $SortPath
-        if($Order) {
-            $Scripts = $Scripts | Sort-CustomList -List $Order -SortOnProperty BaseName
-            Write-Verbose "Sorting scripts with order [$Order]"
-        }
+    if($Script:ScriptOrder) {
+        $Scripts = $Scripts | Sort-CustomList -List $Script:ScriptOrder -SortOnProperty BaseName
+        Write-Verbose "Sorting scripts with order [$Script:ScriptOrder]"
     }
     if($Dependencies) {
         $DependencyOrder = Get-TopologicalSort $Dependencies
@@ -64,14 +61,6 @@ function Connect-TheDots {
                                       "Connecting dots" )
         ) {
             try {
-                $ConfigScript = Join-Path $ConfPath "$($Script.BaseName).Config.ps1"
-                if(Test-Path $ConfigScript) {
-                    Write-Verbose "Dot sourcing [$ConfigScript]"
-                    . $ConfigScript
-                }
-                else {
-                    Write-Verbose "No config script found at [$ConfigScript]"
-                }
                 Write-Verbose "Dot sourcing [$Script]"
                 . $Script -ErrorAction Stop
             }

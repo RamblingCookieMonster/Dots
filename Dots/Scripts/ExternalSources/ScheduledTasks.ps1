@@ -17,12 +17,27 @@ param(
         'RunLevel',
         'Description'
     ),
-    [string[]]$Excludes,
-    [object[]]$Transforms
+    [string[]]$Excludes = 'Path',
+    [object[]]$Transforms = @(
+        '*',
+        @{
+            label = 'TaskPath'
+            expression = {
+                $_.Path -replace "^/"
+            }
+        },
+        @{
+            label = 'HostName'
+            expression = {
+                $_.ComputerName.ToLower()
+            }
+        }
+    )
 )
+$Date = Get-Date
 # Dot source so module import is available in this scope
-if($TestMode) {
-    . $(Join-Path $DataPath Mocks.ps1)
+if($Script:TestMode) {
+    . $(Join-Path $Script:DataPath Mocks.ps1)
 }
 <#
     Import or define code to get all scheduled tasks
@@ -31,22 +46,6 @@ if($TestMode) {
         delegated/constrained endpoints that avoid exposing creds to mimikatz
         other options that don't give the remote systems your creds...
 #>
-
-# Resolve Dots config, script config, override with parameters if defined
-$ConfigPath = Get-ConfigPath Dots
-if($ConfigPath) {
-    . $ConfigPath
-}
-$ConfigPath = Get-ConfigPath $PSCommandPath
-if($ConfigPath) {
-    . $ConfigPath
-}
-'Excludes', 'Transforms' | ForEach-Object {
-    if($PSBoundParameters.ContainsKey($_)) {
-        Set-Variable -Name $_ -Value $PSBoundParameters[$_] -Force
-    }
-    Write-Verbose "$_ is $(Get-Variable -Name $_ -ValueOnly | Out-String)"
-}
 
 [object[]]$Tasks = Get-ScheduledTasks |
     Select-Object -Property $Properties |
@@ -65,7 +64,7 @@ Foreach($Task in $Tasks) {
     $Count++
 
     Set-Neo4jNode -InputObject $Task -Label $Label -Hash @{
-        TSKHostName = $Task.TSKHostName
+        TSKHostname = $Task.TSKHostname
         TSKTaskPath = $Task.TSKTaskPath
     }
 
@@ -74,11 +73,11 @@ Foreach($Task in $Tasks) {
                                       WHERE left.TSKHostName = {TSKHostName} AND
                                             left.TSKTaskPath = {TSKTaskPath}" `
                           -RightQuery "MATCH (right:Server)
-                          WHERE right.${CMDBPrefix}HostName STARTS WITH {Start}" `
+                          WHERE right.${script:CMDBPrefix}Hostname STARTS WITH {Start}" `
                           -Parameters  @{
-                              TSKHostName = $Task.TSKHostName
+                              TSKHostName = $Task.TSKHostname
                               TSKTaskPath = $Task.TSKTaskPath
-                              Start = "$($Task.TSKHostName)." # Assumes host names are unique across all domains
+                              Start = "$($Task.TSKHostname)." # Assumes host names are unique across all domains
                           } `
                           -Type RunsOn
 

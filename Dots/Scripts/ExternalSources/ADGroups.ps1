@@ -14,30 +14,34 @@ param(
         'Description'
     ),
     [string[]]$Excludes = @('CanonicalName', 'CN', 'ManagedBy'),
-    [object[]]$Transforms
+    [object[]]$Transforms = @(
+        '*',
+        @{
+            label = 'ParentCanonicalName'
+            expression = {$_.CanonicalName -replace "/$($_.CN)$"}
+        },
+        @{
+            label = "Managed_By"
+            expression = {
+                try {
+                    if($_.ManagedBy) {
+                        $a = $null
+                        $a = $_
+                        (ActiveDirectory\Get-ADObject $_.ManagedBy -Properties SamAccountName -ErrorAction Stop).SamAccountName
+                    }
+                }
+                catch {Write-Warning "$($a.Name) managed by doesn't exist:$($a.ManagedBy)"}}
+        }
+    )
 )
+$Unique = "${Prefix}${MergeProperty}"
+$Date = Get-Date
 # Dot source so module import is available in this scope
-if($TestMode) {
-    . $(Join-Path $DataPath Mocks.ps1)
+if($Script:TestMode) {
+    . $(Join-Path $Script:DataPath Mocks.ps1)
 }
 else {
     . Import-RequiredModule ActiveDirectory -ErrorAction Stop
-}
-
-# Resolve Dots config, script config, override with parameters if defined
-$ConfigPath = Get-ConfigPath Dots
-if($ConfigPath) {
-    . $ConfigPath
-}
-$ConfigPath = Get-ConfigPath $PSCommandPath
-if($ConfigPath) {
-    . $ConfigPath
-}
-$PSBoundParameters.Keys | ForEach-Object {
-    if($PSBoundParameters.ContainsKey($_)) {
-        Set-Variable -Name $_ -Value $PSBoundParameters[$_] -Force
-    }
-    Write-Verbose "$_ is $(Get-Variable -Name $_ -ValueOnly | Out-String)"
 }
 
 $Nodes = Get-ADGroup -Filter * -Properties $Properties |
@@ -47,7 +51,7 @@ $Nodes = Get-ADGroup -Filter * -Properties $Properties |
 $Nodes = Foreach($Node in $Nodes) {
     $Node.SID = $Node.SID.Value
     $Output = Add-PropertyPrefix -Prefix $Prefix -Object $Node
-    Add-Member -InputObject $Output -MemberType NoteProperty -Name "${CMDBPrefix}${Prefix}UpdateDate" -Value $Date -Force
+    Add-Member -InputObject $Output -MemberType NoteProperty -Name "${script:CMDBPrefix}${Prefix}UpdateDate" -Value $Date -Force
     $Output
 }
 

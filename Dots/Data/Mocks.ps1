@@ -1,6 +1,6 @@
 function Get-ADComputer {
     [pscustomobject]@{
-        AIDBHostName = 'dc01.ad.contoso.com'
+        DotsHostname = 'dc01.ad.contoso.com'
         DNSHostname = 'dc01.ad.contoso.com'
         Name = 'dc01'
         OperatingSystem = 'Windows Server 2016 Datacenter'
@@ -9,7 +9,7 @@ function Get-ADComputer {
         lastlogondate = [datetime]::Now
     },
     [pscustomobject]@{
-        AIDBHostName = 'dc02.ad.contoso.com'
+        DotsHostname = 'dc02.ad.contoso.com'
         DNSHostname = 'dc02.ad.contoso.com'
         Name = 'dc02'
         OperatingSystem = 'Windows Server 2016 Datacenter'
@@ -18,7 +18,7 @@ function Get-ADComputer {
         lastlogondate = [datetime]::Now
     },
     [pscustomobject]@{
-        AIDBHostName = 'cfgmgmt01.ad.contoso.com'
+        DotsHostname = 'cfgmgmt01.ad.contoso.com'
         DNSHostname = 'cfgmgmt01.ad.contoso.com'
         Name = 'cfgmgmt01'
         OperatingSystem = 'Windows Server 2016 Datacenter'
@@ -27,7 +27,7 @@ function Get-ADComputer {
         lastlogondate = [datetime]::Now
     },
     [pscustomobject]@{
-        AIDBHostName = 'psbot01.ad.contoso.com'
+        DotsHostname = 'psbot01.ad.contoso.com'
         DNSHostname = 'psbot01.ad.contoso.com'
         Name = 'psbot01'
         OperatingSystem = 'Windows Server 2016 Datacenter'
@@ -65,7 +65,7 @@ function Get-PDBNodeFact {
     switch($Certname) {
         'dc01.ad.contoso.com' {
             [pscustomobject]@{
-                AIDBHostName = 'dc01.ad.contoso.com'
+                DotsHostname = 'dc01.ad.contoso.com'
                 certname = 'dc01.ad.contoso.com'
                 environment = 'production'
                 puppet_classes = '["default", "nagios::base", "nagios::client", "profiles::base", "profiles::service::nxlog", "roles::service::msadds"]'
@@ -73,7 +73,7 @@ function Get-PDBNodeFact {
         }
         'dc02.ad.contoso.com' {
             [pscustomobject]@{
-                AIDBHostName = 'dc02.ad.contoso.com'
+                DotsHostname = 'dc02.ad.contoso.com'
                 certname = 'dc02.ad.contoso.com'
                 environment = 'wframe/winlogbeat'
                 puppet_classes = '["default", "nagios::base", "nagios::client", "profiles::base", "profiles::service::winlogbeat", "roles::service::msadds"]'
@@ -81,7 +81,7 @@ function Get-PDBNodeFact {
         }
         'cfgmgmt01.ad.contoso.com' {
             [pscustomobject]@{
-                AIDBHostName = 'cfgmgmt01.ad.contoso.com'
+                DotsHostname = 'cfgmgmt01.ad.contoso.com'
                 certname = 'cfgmgmt01.ad.contoso.com'
                 environment = 'production'
                 puppet_classes = '["default", "nagios::base", "nagios::client", "profiles::base", "profiles::service::nxlog"]'
@@ -89,7 +89,7 @@ function Get-PDBNodeFact {
         }
         'gitlab01.ad.contoso.com' {
             [pscustomobject]@{
-                AIDBHostName = 'gitlab01.ad.contoso.com'
+                DotsHostname = 'gitlab01.ad.contoso.com'
                 certname = 'gitlab01.ad.contoso.com'
                 environment = 'production'
                 puppet_classes = '["default", "nagios::base", "nagios::client", "profiles::base", "roles::service::gitlab"]'
@@ -97,7 +97,7 @@ function Get-PDBNodeFact {
         }
         'psbot01.ad.contoso.com' {
             [pscustomobject]@{
-                AIDBHostName = 'psbot01.ad.contoso.com'
+                DotsHostname = 'psbot01.ad.contoso.com'
                 certname = 'psbot01.ad.contoso.com'
                 environment = 'production'
                 puppet_classes = '["default", "nagios::base", "nagios::client", "profiles::base", "profiles::service::nxlog", "roles::psbot"]'
