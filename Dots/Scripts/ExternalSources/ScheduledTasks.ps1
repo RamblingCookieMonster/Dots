@@ -27,7 +27,7 @@ param(
             }
         },
         @{
-            label = 'HostName'
+            label = 'Hostname'
             expression = {
                 $_.ComputerName.ToLower()
             }
@@ -53,7 +53,7 @@ if($Script:TestMode) {
 
 $Tasks = Foreach($Task in $Tasks) {
     $Output = Add-PropertyPrefix -Prefix $Prefix -Object $Task
-    Add-Member -InputObject $Output -MemberType NoteProperty -Name "${CMDBPrefix}${Prefix}UpdateDate" -Value $Date -Force
+    Add-Member -InputObject $Output -MemberType NoteProperty -Name "${Script:CMDBPrefix}${Prefix}UpdateDate" -Value $Date -Force
     $Output
 }
 
@@ -70,12 +70,12 @@ Foreach($Task in $Tasks) {
 
     # hostname's not unique across all qualified doman namespaces?  Use different logic
     New-Neo4jRelationship -LeftQuery "MATCH (left:Task)
-                                      WHERE left.TSKHostName = {TSKHostName} AND
+                                      WHERE left.TSKHostname = {TSKHostname} AND
                                             left.TSKTaskPath = {TSKTaskPath}" `
                           -RightQuery "MATCH (right:Server)
                           WHERE right.${script:CMDBPrefix}Hostname STARTS WITH {Start}" `
                           -Parameters  @{
-                              TSKHostName = $Task.TSKHostname
+                              TSKHostname = $Task.TSKHostname
                               TSKTaskPath = $Task.TSKTaskPath
                               Start = "$($Task.TSKHostname)." # Assumes host names are unique across all domains
                           } `

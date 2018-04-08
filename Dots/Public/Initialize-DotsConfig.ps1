@@ -8,9 +8,6 @@ function Initialize-DotsConfig {
 
         This will set Dots back to the defaults, with overrides as specified by parameters
 
-        WARNING: Use this to store your PSNeo4j credential on a filesystem at your own risk.
-                 We use the DPAPI to store this.  This credential serialization only happens on Windows
-
     .PARAMETER CMDBPrefix
         Prefix for Dots-owned data, when multiple data sources are present
         Defaults to Dots
@@ -34,21 +31,20 @@ function Initialize-DotsConfig {
         Items not included run last
         Required in cases where data must exist first - e.g. start and end nodes for a relationship
 
+    .PARAMETER ScriptsToRun
+        Specify a whitelist of scripts that Dots will run
+        All other scripts will be ignored
+
+    .PARAMETER ScriptsToIgnore
+        Specify a blacklist of scripts that Dots will ignore
+        All other scripts will run
+
     .PARAMETER ServerUnique
         Unique identifier for a :Server.  Used to correlate and to avoid duplicates
         Defaults to ${CMDBPrefix}Hostname
 
     .PARAMETER TestMode
         If specified, we generate Dots from pre-existing mock data
-
-    .PARAMETER BaseUri
-        BaseUri for PSNeo4j
-        Defaults to http://127.0.0.1:7474
-
-    .PARAMETER Credential
-        Credential for PSNeo4j
-        Serializing this to disk is not supported in cross platform scenarios
-        Defaults to neo4j:neo4j
 
     .PARAMETER Path
         If specified, save config file to this file path
@@ -70,39 +66,29 @@ function Initialize-DotsConfig {
                                   'PuppetDB',
                                   'Service',
                                   'Service-DependsOn' ),
+        [string[]]$ScriptsToRun,
+        [string[]]$ScriptsToIgnore,
         [string]$ServerUnique, # Default is computed below
         [switch]$TestMode,
-        [string]$BaseUri = 'http://127.0.0.1:7474',
-        [ValidateNotNull()]
-        [System.Management.Automation.PSCredential]
-        [System.Management.Automation.Credential()]
-        $Credential,
         [string]$Path = $script:_DotsConfigXmlpath
     )
     if(-not $PSBoundParameters.ContainsKey('ServerUnique')) {
         $ServerUnique = "${CMDBPrefix}Hostname"
-        $PSBoundParameters.Add('ServerUnique', $ServerUnique)
-    }
-    if(-not $PSBoundParameters.ContainsKey('Credential')) {
-        $Password = ConvertTo-SecureString -String "neo4j" -AsPlainText -Force
-        $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList 'neo4j', $Password
-        $PSBoundParameters.Add('Credential', $Credential)
     }
     Switch ($DotsProps)
     {
-        'CMDBPrefix'   { $Script:DotsConfig.CMDBPrefix = $CMDBPrefix }
-        'DataPath'     { $Script:DotsConfig.DataPath = $DataPath }
-        'ScriptsPath'  { $Script:DotsConfig.ScriptsPath = $ScriptsPath }
-        'ScriptOrder'  { $Script:DotsConfig.ScriptOrder = [string[]]$ScriptOrder }
-        'ServerUnique' { $Script:DotsConfig.ServerUnique = $ServerUnique }
-        'TestMode'     { $Script:DotsConfig.TestMode = [bool]$TestMode }
-        'BaseUri'      { $Script:DotsConfig.BaseUri = $BaseUri }
-        'Credential'   { $Script:DotsConfig.Credential = $Credential }
+        'CMDBPrefix'      { $Script:DotsConfig.CMDBPrefix = $CMDBPrefix }
+        'DataPath'        { $Script:DotsConfig.DataPath = $DataPath }
+        'ScriptsPath'     { $Script:DotsConfig.ScriptsPath = $ScriptsPath }
+        'ScriptOrder'     { $Script:DotsConfig.ScriptOrder = [string[]]$ScriptOrder }
+        'ScriptsToRun'    { $Script:DotsConfig.ScriptsToRun = [string[]]$ScriptsToRun }
+        'ScriptsToIgnore' { $Script:DotsConfig.ScriptsToIgnore = [string[]]$ScriptsToIgnore }
+        'ServerUnique'    { $Script:DotsConfig.ServerUnique = $ServerUnique }
+        'TestMode'        { $Script:DotsConfig.TestMode = [bool]$TestMode }
     }
 
     # Create variables for config props, for convenience
     foreach($Prop in $DotsProps) {
-        Write-Host "Set $Prop to $($DotsConfig.$Prop)"
         Set-Variable -Name $Prop -Value $DotsConfig.$Prop -Scope Script -Force
     }
 

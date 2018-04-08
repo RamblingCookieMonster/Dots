@@ -1,13 +1,10 @@
 function Set-DotsConfig {
     <#
     .SYNOPSIS
-        Set Dots module configuration.
+        Set Dots module configuration
 
     .DESCRIPTION
-        Set Dots module configuration, and $DotsConfig module variable.
-
-        WARNING: Use this to store your PSNeo4j credential on a filesystem at your own risk.
-                 We use the DPAPI to store this.  This credential serialization only happens on Windows
+        Set Dots module configuration, and $DotsConfig module variable
 
     .PARAMETER CMDBPrefix
         Prefix for Dots-owned data, when multiple data sources are present
@@ -24,17 +21,19 @@ function Set-DotsConfig {
         Items not included run last
         Required in cases where data must exist first - e.g. start and end nodes for a relationship
 
+    .PARAMETER ScriptsToRun
+        Specify a whitelist of scripts that Dots will run
+        All other scripts will be ignored
+
+    .PARAMETER ScriptsToIgnore
+        Specify a blacklist of scripts that Dots will ignore
+        All other scripts will run
+
     .PARAMETER ServerUnique
         Unique identifier for a :Server.  Used to correlate and to avoid duplicates
 
     .PARAMETER TestMode
         If specified, we generate Dots from pre-existing mock data
-
-    .PARAMETER BaseUri
-        BaseUri for PSNeo4j
-
-    .PARAMETER Credential
-        Credential for PSNeo4j
 
     .PARAMETER Path
         If specified, save config file to this file path
@@ -51,32 +50,29 @@ function Set-DotsConfig {
         [string]$DataPath,
         [string]$ScriptsPath,
         [string[]]$ScriptOrder,
+        [string[]]$ScriptsToRun,
+        [string[]]$ScriptsToIgnore,
         [string]$ServerUnique,
         [switch]$TestMode,
-        [string]$BaseUri,
-        [ValidateNotNull()]
-        [System.Management.Automation.PSCredential]
-        [System.Management.Automation.Credential()]
-        $Credential,
         [string]$Path = $script:_DotsConfigXmlpath
     )
 
     Switch ($PSBoundParameters.Keys)
     {
-        'CMDBPrefix'   { $Script:DotsConfig.CMDBPrefix = $CMDBPrefix }
-        'DataPath'     { $Script:DotsConfig.DataPath = $DataPath }
-        'ScriptsPath'  { $Script:DotsConfig.ScriptsPath = $ScriptsPath }
-        'ScriptOrder'  { $Script:DotsConfig.ScriptOrder = [string[]]$ScriptOrder }
-        'ServerUnique' { $Script:DotsConfig.ServerUnique = $ServerUnique }
-        'TestMode'     { $Script:DotsConfig.TestMode = [bool]$TestMode }
-        'BaseUri'      { $Script:DotsConfig.BaseUri = $BaseUri }
-        'Credential'   { $Script:DotsConfig.Credential = $Credential }
+        'CMDBPrefix'      { $Script:DotsConfig.CMDBPrefix = $CMDBPrefix }
+        'DataPath'        { $Script:DotsConfig.DataPath = $DataPath }
+        'ScriptsPath'     { $Script:DotsConfig.ScriptsPath = $ScriptsPath }
+        'ScriptOrder'     { $Script:DotsConfig.ScriptOrder = [string[]]$ScriptOrder }
+        'ScriptsToRun'    { $Script:DotsConfig.ScriptsToRun = [string[]]$ScriptsToRun }
+        'ScriptsToIgnore' { $Script:DotsConfig.ScriptsToIgnore = [string[]]$ScriptsToIgnore }
+        'ServerUnique'    { $Script:DotsConfig.ServerUnique = $ServerUnique }
+        'TestMode'        { $Script:DotsConfig.TestMode = [bool]$TestMode }
     }
     # Create variables for config props, for convenience
     foreach($Prop in $DotsProps) {
-        Write-Host "Set $Prop to $($DotsConfig.$Prop)"
         Set-Variable -Name $Prop -Value $DotsConfig.$Prop -Scope Script -Force
     }
+
     $SelectParams = @{
         Property = $Script:DotsProps
     }
@@ -88,15 +84,3 @@ function Set-DotsConfig {
         Select-Object @SelectParams |
         Export-Clixml -Path $Path -Force
 }
-<#
-# Check for nonexistent paths
-        $Path = $Output.$PathType
-        if(-not $Path) {
-            $Path = Join-Path $ModuleRoot $PathType
-            $Output.$PathType = $Path
-        }
-        if(-not (Test-Path $Path -PathType Container)) {
-            throw "The [$PathType] [$Path] does not exist.`nCreate this, or fix it in your [$ModuleRoot\dots.conf]"
-        }
-
-        #>

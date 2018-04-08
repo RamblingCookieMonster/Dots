@@ -13,8 +13,6 @@ Uses:
 Admins:
   psbot-admins:
     description: Authors and uses PSBot plugins, integrations, and other components
-  computer-admin-psbot01:
-    description: Administrative access and operations for psbot servers
 
 Owns:
   aboss:

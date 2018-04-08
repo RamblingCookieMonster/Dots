@@ -32,7 +32,7 @@ foreach($file in $files) {
 
         if($Dependency.ContainsKey('servers') -and $Dependency.servers.count -gt 0) {
             $Left = "MATCH (left:Service) WHERE left.name_key = {name} OR left.name = {name}"
-            $Right = "MATCH (right:Server) WHERE right.${CMDBPrefix}HostName IN {servers}"
+            $Right = "MATCH (right:Server) WHERE right.${Script:CMDBPrefix}Hostname IN {servers}"
             $Output = New-Neo4jRelationship @Params -LeftQuery $Left `
                                                     -RightQuery $Right `
                                                     -Type DependsOn `
@@ -48,7 +48,7 @@ foreach($file in $files) {
                            -Output $Output
 
             if($PartOfService) {
-                $Left = "MATCH (left:Server) WHERE left.${CMDBPrefix}HostName IN {servers}"
+                $Left = "MATCH (left:Server) WHERE left.${Script:CMDBPrefix}Hostname IN {servers}"
                 $Right = "MATCH (right:Service) WHERE right.name_key = {name} OR right.name = {name}"
                 $Output = New-Neo4jRelationship @Params -LeftQuery $Left `
                                                         -RightQuery $Right `

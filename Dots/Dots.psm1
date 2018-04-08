@@ -17,18 +17,16 @@ $DotsProps = 'CMDBPrefix',
              'ScriptsPath',
              'DataPath',
              'ScriptOrder',
+             'ScriptsToRun',
+             'ScriptsToIgnore',
              'ServerUnique',
-             'TestMode',
-             'BaseUri',
-             'Credential'
+             'TestMode'
 $DotsConfig = [pscustomobject]@{} | Select-Object $DotsProps
 $_DotsConfigXmlpath = Get-DotsConfigPath
-Write-Host "_DotsConfigXmlpath is $_DotsConfigXmlpath"
 if(-not (Test-Path -Path $_DotsConfigXmlpath -ErrorAction SilentlyContinue)) {
     try {
         Write-Warning "Did not find config file [$_DotsConfigXmlpath], attempting to initialize"
-        Initialize-DotsConfig -Path $_DotsConfigXmlpath
-        Write-Host "DotsConfig initialized $($DotsConfig | Out-String)"
+        Initialize-DotsConfig -Path $_DotsConfigXmlpath -ErrorAction Stop
     }
     catch {
         Write-Warning "Failed to create config file [$_DotsConfigXmlpath]: $_"
@@ -36,17 +34,16 @@ if(-not (Test-Path -Path $_DotsConfigXmlpath -ErrorAction SilentlyContinue)) {
 }
 else {
     $DotsConfig = Get-DotsConfig -Source Xml
-    Write-Host "DotsConfig imported $($DotsConfig | Out-String)"
 }
 
 # Create variables for config props, for convenience
+# We also do this in Set/Initialize commands
 foreach($Prop in $DotsProps) {
-    Write-Host "Set $Prop to $($DotsConfig.$Prop)"
     Set-Variable -Name $Prop -Value $DotsConfig.$Prop -Force
 }
 
 # Resolve paths we'll use somewhat often
-$ExternalSourcesScriptsPath = (Resolve-Path "$ScriptsPath\ExternalSources").Path
+$ExternalSourcesScriptPath = (Resolve-Path "$ScriptsPath\ExternalSources").Path
 $DotsSourcesScriptPath = (Resolve-Path "$ScriptsPath\DotsSources").Path
 
 Export-ModuleMember -Function $Public.Basename

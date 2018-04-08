@@ -1,7 +1,7 @@
 [cmdletbinding()]
 param(
     [string]$Prefix = 'AD',
-    [string]$MergeProperty = 'DNSHostName',
+    [string]$MergeProperty = 'DNSHostname',
     [string]$Label = 'Server',
     [string[]]$Properties = @(
         'CanonicalName',
@@ -10,7 +10,7 @@ param(
         'LastLogonDate',
         'OperatingSystem',
         'OperatingSystemVersion',
-        'DNSHostName',
+        'DNSHostname',
         'Name'
     ),
     [string[]]$Excludes = @('Name'),
@@ -40,7 +40,7 @@ else {
 }
 
 $Nodes = Get-ADComputer -Filter * -Properties $Properties |
-    Where-Object {$_.DNSHostName -and $_.LastLogonDate -gt $CruftDate} |
+    Where-Object {$_.DNSHostname -and $_.LastLogonDate -gt $CruftDate} |
     Select-Object -Property $Properties |
     Select-Object -Property $Transforms -ExcludeProperty $Excludes
 

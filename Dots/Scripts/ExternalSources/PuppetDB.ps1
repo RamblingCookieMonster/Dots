@@ -64,7 +64,6 @@ $Nodes = foreach($Node in $Nodes) {
         Select-Object -Property $Transforms |
         Select-Object -Property * -ExcludeProperty $Excludes
 }
-
 $Nodes = Foreach($Node in $Nodes) {
     $Output = Add-PropertyPrefix -Prefix $Prefix -Object $Node
     Add-Member -InputObject $Output -MemberType NoteProperty -Name "${script:CMDBPrefix}${Prefix}UpdateDate" -Value $Date -Force

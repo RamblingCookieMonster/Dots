@@ -1,5 +1,18 @@
 # Borrowed from Brandon Olin - Thanks!
 function Get-DotsConfigPath {
+    <#
+    .SYNOPSIS
+        Get Dots configuration file path
+
+    .DESCRIPTION
+        Get Dots configuration file path
+
+    .EXAMPLE
+        Get-DotsConfigPath
+
+    .FUNCTIONALITY
+        Dots
+    #>
     [CmdletBinding()]
     param()
     end {

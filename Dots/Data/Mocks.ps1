@@ -153,13 +153,6 @@ function Get-ADGroup {
         SID = @{value='S-1-5-21-1004336348-1177238915-682003330-513'}
     },
     [pscustomobject]@{
-        SamAccountName = 'computer-admin-psbot01'
-        name = 'computer-admin-psbot01'
-        distinguishedname = 'CN=computer-admin-psbot01,OU=groups,OU=tier 1,DC=ad,DC=contoso,DC=com'
-        managedby = 'CN=wframe,OU=Domain Users,DC=ad,DC=contoso,DC=com'
-        SID = @{value='S-1-5-21-1004336348-1177238915-682003330-111111'}
-    },
-    [pscustomobject]@{
         SamAccountName = 'psbot-users'
         name = 'psbot-users'
         distinguishedname = 'CN=psbot-users,OU=Domain Groups,DC=ad,DC=contoso,DC=com'

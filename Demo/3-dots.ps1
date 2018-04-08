@@ -1,6 +1,4 @@
 ﻿# This is in the 'get it working' stage - will change significantly...
-$DotsPath = '~/sc/Dots/Dots'
-
 Import-Module "/Users/wframe/sc/Dots/Dots" -Force
 
 # Install Dots
@@ -24,10 +22,11 @@ Clear-Neo4j
 
 Connect-TheDots -WhatIf
 Connect-TheDots -WhatIf -Include ADComputers
-Connect-TheDots -WhatIf -Scope Manual
-
+Connect-TheDots -WhatIf -Scope DotsSources
 
 Connect-TheDots -Confirm:$False -Verbose
 
+# http://192.168.99.100:7474
+#   * Favorites -> Data Profiling -> 'What is related, and how'
 
 Clear-Neo4j
