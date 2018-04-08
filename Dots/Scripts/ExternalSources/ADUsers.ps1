@@ -32,7 +32,8 @@ $Unique = "${Prefix}${MergeProperty}"
 $Date = Get-Date
 # Dot source so module import is available in this scope
 if($script:TestMode) {
-    . $(Join-Path $script:DataPath Mocks.ps1)
+    Write-Verbose "Using mock functions from $ModuleRoot/Mock/Mocks.ps1"
+    . "$ModuleRoot/Mock/Mocks.ps1"
 }
 else {
     . Import-RequiredModule ActiveDirectory -ErrorAction Stop

@@ -11,18 +11,26 @@
         Path to yaml files
         Defaults to DataPath\Service-DependOn\*.yml
 
+        If TestMode is set, we override this to Dots/Mock/Data/*.yml
     .FUNCTIONALITY
         Dots
     #>
 [cmdletbinding()]
 param(
-    $Path = "$script:DataPath\$ScriptName\*.yml"
+    $Path
 )
+$ScriptName = $MyInvocation.MyCommand.Name -replace '.ps1$'
+if($Script:TestMode){
+    $Path = "$ModuleRoot/Mock/Data/$ScriptName/*.yml"
+}
+elseif(-not $PSBoundParameters.ContainsKey('Path')){
+    $Path = "$script:DataPath/$ScriptName/*.yml"
+}
+Write-Verbose "Parsing $ScriptName files from $Path"
 #service-dependson-server
 Invoke-Neo4jQuery "MATCH (:Service)-[r:DependsOn]->() DELETE r"
 Invoke-Neo4jQuery -Query "MATCH ()-[r:IsPartOf]->(:Service) DELETE r"
 
-$ScriptName = $MyInvocation.MyCommand.Name -replace '.ps1$'
 "`n###############"
 "Running $ScriptName )"
 "###############"

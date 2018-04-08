@@ -15,15 +15,23 @@
         Path to yaml files
         Defaults to DataPath\Service\*.yml
 
+        If TestMode is set, we override this to Dots/Mock/Data/*.yml
     .FUNCTIONALITY
         Dots
     #>
 [cmdletbinding()]
 param(
     $RelationshipTypes = @('Uses', 'Admins', 'Owns', 'Owns_Data'),
-    $Path = "$script:DataPath\$ScriptName\*.yml"
+    $Path
 )
-
+$ScriptName = $MyInvocation.MyCommand.Name -replace '.ps1$'
+if($Script:TestMode){
+    $Path = "$ModuleRoot/Mock/Data/$ScriptName/*.yml"
+}
+elseif(-not $PSBoundParameters.ContainsKey('Path')){
+    $Path = "$script:DataPath/$ScriptName/*.yml"
+}
+Write-Verbose "Parsing $ScriptName files from $Path"
 # Build up services and principal relationships
 # Delete all existing data beforehand
 foreach($RelationshipType in $RelationshipTypes) {
@@ -31,7 +39,6 @@ foreach($RelationshipType in $RelationshipTypes) {
 }
 Invoke-Neo4jQuery -Query "MATCH (s:Service) DETACH DELETE s"
 
-$ScriptName = $MyInvocation.MyCommand.Name -replace '.ps1$'
 "`n###############"
 "Running $ScriptName"
 "###############"

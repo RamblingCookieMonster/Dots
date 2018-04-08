@@ -26,6 +26,10 @@ function Get-DotsScript {
             DataSource1 = 'DataSourceFirst1', 'DataSourceFirst2'
         }
 
+    .PARAMETER ScriptsPath
+        Path to look for scripts in
+        Must include ExternalSources and DotsSources subfolder for -DataSource to work
+
     .EXAMPLE
         Get-DotsScript
         # Show all Dots scripts

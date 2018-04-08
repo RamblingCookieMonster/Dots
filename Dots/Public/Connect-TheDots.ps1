@@ -55,8 +55,13 @@ function Connect-TheDots {
         [hashtable]$Dependencies,
         [switch]$Show
     )
-    $Scripts = Get-DotsScript @PSBoundParameters
-
+    $GetScriptParams = @{}
+    'DataSource', 'Include', 'Exclude', 'Dependencies' | Foreach-Object {
+        if($PSBoundParameters.ContainsKey($_)){
+            $GetScriptParams.add($_,$PSBoundParameters[$_])
+        }
+    }
+    $Scripts = Get-DotsScript @GetScriptParams
     Write-Verbose "Running Scripts: $($Scripts.FullName | Out-String)"
     foreach($Script in $Scripts) {
         if ( $PSCmdlet.ShouldProcess( "Connected the dots '$($Script.Fullname)'",

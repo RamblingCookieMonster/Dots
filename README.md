@@ -1,6 +1,6 @@
 # Dots
 
-This is a janky CMDB-lite that uses PowerShell, neo4j, and a little duct-tape.
+This is a janky CMDB-lite that uses PowerShell, neo4j, and a little duct-tape
 
 ## What can Dots do?
 
@@ -56,7 +56,13 @@ Get-DotsConfig
 
 ```powershell
 Import-Module Dots -Force
-Get-Help Connect-TheDots -Full
+
+# Check the default configs
+Get-DotsConfig
+
+# Check Set-DotsConfig, set things as desired.  We'll use mock data via 'TestMode'
+Get-Help Set-DotsConfig -Full
+Set-DotsConfig -TestMode
 
 # Check what would run by default
 Connect-TheDots -Whatif
@@ -97,10 +103,14 @@ Clear-Neo4j
 
 ## What do I need to configure?
 
-* `Dots\dots.conf` points to three paths.        See the file for in depth explanations
-  * `ScriptsPath`  default: `Dots\Scripts`       The scripts that query ExternalSources and DotsSources live here
-  * `DataPath`     default: `Dots\Data`          DotsSources yaml data lives here (e.g. service definitions)
-* `Set-DotsConfig` default: See `Get-DotsConfig` Various Dots configurations
+ Most configuration involves `Get-DotsConfig` and `Set-DotsConfig`
+
+Some things to consider:
+
+* `ScriptsPath` and `DataPath` live under the module by default.  Move these elsewhere to avoid losing them if you remove or update the module
+* You might not have all of the data sources we support by default.  Use `ScriptsToIgnore` to exclude these
+* This DotsConfig data is serialized in a file identified via `Get-DotsConfigPath`
+* We heavily use PSNeo4j.  You can use `Set-PSNeo4jConfiguration` and `Get-PSNeo4jConfiguration` to configure this.  At a minimum, you'll need to specify the `BaseUri` and `Credential`
 
 ## Does this support <insert technology>?
 

@@ -37,7 +37,8 @@ param(
 $Date = Get-Date
 # Dot source so module import is available in this scope
 if($Script:TestMode) {
-    . $(Join-Path $Script:DataPath Mocks.ps1)
+    Write-Verbose "Using mock functions from $ModuleRoot/Mock/Mocks.ps1"
+    . "$ModuleRoot/Mock/Mocks.ps1"
 }
 <#
     Import or define code to get all scheduled tasks
