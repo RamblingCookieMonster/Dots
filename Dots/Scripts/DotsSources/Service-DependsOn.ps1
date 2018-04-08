@@ -1,3 +1,23 @@
+    <#
+    .SYNOPSIS
+        Read Service-DependsOn definitions, add to Neo4j
+
+    .DESCRIPTION
+        Read Service-DependsOn definitions, add to Neo4j
+
+        This is invoked by Connect-TheDots
+
+    .PARAMETER Path
+        Path to yaml files
+        Defaults to DataPath\Service-DependOn\*.yml
+
+    .FUNCTIONALITY
+        Dots
+    #>
+[cmdletbinding()]
+param(
+    $Path = "$script:DataPath\$ScriptName\*.yml"
+)
 #service-dependson-server
 Invoke-Neo4jQuery "MATCH (:Service)-[r:DependsOn]->() DELETE r"
 Invoke-Neo4jQuery -Query "MATCH ()-[r:IsPartOf]->(:Service) DELETE r"
@@ -6,7 +26,7 @@ $ScriptName = $MyInvocation.MyCommand.Name -replace '.ps1$'
 "`n###############"
 "Running $ScriptName )"
 "###############"
-$files = Get-ChildItem $script:DataPath\$ScriptName\*.yml -File | Where-Object {$_.BaseName -notmatch '^[0-9].*Template$'}
+$files = Get-ChildItem $Path -File | Where-Object {$_.BaseName -notmatch '^[0-9].*Template$'}
 foreach($file in $files) {
     "### PARSING ### $($file.fullname)"
     $yaml = Get-Content $file.fullname -Raw

@@ -1,14 +1,33 @@
+    <#
+    .SYNOPSIS
+        Read Service definitions, add to Neo4j
+
+    .DESCRIPTION
+        Read Service definitions, add to Neo4j
+
+        This is invoked by Connect-TheDots
+
+    .PARAMETER RelationshipTypes
+        Whitelist of user/group relationship types to this service.
+        Defaults to Uses, Admins, Owns, Owns_Data
+
+    .PARAMETER Path
+        Path to yaml files
+        Defaults to DataPath\Service\*.yml
+
+    .FUNCTIONALITY
+        Dots
+    #>
 [cmdletbinding()]
 param(
-    $RelationshipTypes = @('Uses', 'Admins', 'Owns', 'Owns_Data')
+    $RelationshipTypes = @('Uses', 'Admins', 'Owns', 'Owns_Data'),
+    $Path = "$script:DataPath\$ScriptName\*.yml"
 )
 
-<#
-    Build up services and principal relationships
-    Delete all existing data beforehand
-#>
+# Build up services and principal relationships
+# Delete all existing data beforehand
 foreach($RelationshipType in $RelationshipTypes) {
-    Invoke-Neo4jQuery -Query "MATCH ()-[r:$RelationshipType]->() DELETE r"
+    Invoke-Neo4jQuery -Query "MATCH ()-[r:$RelationshipType]->(:Service) DELETE r"
 }
 Invoke-Neo4jQuery -Query "MATCH (s:Service) DETACH DELETE s"
 
@@ -16,8 +35,7 @@ $ScriptName = $MyInvocation.MyCommand.Name -replace '.ps1$'
 "`n###############"
 "Running $ScriptName"
 "###############"
-$files = Get-ChildItem $script:DataPath\$ScriptName\*.yml -File | Where-Object {$_.BaseName -notmatch '^[0-9].*Template.*'}
-
+$files = Get-ChildItem $Path -File | Where-Object {$_.BaseName -notmatch '^[0-9].*Template.*'}
 foreach($file in $files) {
     "### PARSING ### $($file.fullname)"
     $yaml = Get-Content $file.fullname -Raw

@@ -1,0 +1,51 @@
+# Basic metadata for a service
+
+# The filename is used as a unique identifier for the service
+# this might be a combination of the name and qualifier with underscores instead of spaces
+
+# name: Friendly Service Name     Friendly name for the service.  Spaces are fine
+# qualifier: some qualifier       Could there be more than one similarly named service?  Qualify it with something helpful (e.g. AD domains/forests)
+# keywords: some, comma, words    Keywords you might use to search for this service.  Might include aliases
+# description: Some description   A description of the service, could include a URL
+# security_tier: #                Security tier for the service
+# outage_tier: #                  Outage tier for the service
+
+# Uses:                           Which users/groups use the service
+#   some_account_name:            sAMAccountName for one or more users or groups
+#     description: a description  Describe how they use the service, if desired
+#   'another account':            You can include more than one account (use quotes if spaces)
+#     description:
+# Admins:                         Which users/groups administer the service
+#   some_account_name:            sAMAccountName for one or more users or groups
+#     description: a description  Describe role in managing the system
+# Owns:                           Which users/groups own the service?
+#   some_account_name             sAMAccountName for one or more users or groups
+#     description: a description  Describe this role if desired
+# Admins:                         Which users/groups own the data for the service
+#   some_account_name             sAMAccountName for one or more users or groups
+#     description: a description  Describe this role if desired
+
+
+# Example using AD
+name: Active Directory
+qualifier: ad.contoso.com
+keywords: ldap, ldaps, kerberos, identity, authentication, configuration
+description: identity, authentication, and related services
+security_tier: 0
+outage_tier: 0
+
+Uses:
+  'Domain Users':
+    description: Everyone uses AD
+
+Admins:
+  'Domain Admins':
+    description: Administer AD
+
+Owns:
+  aboss:
+    description: Systems/service owner
+
+Owns_Data:
+  another_boss:
+    description: Data owner

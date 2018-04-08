@@ -1,0 +1,38 @@
+# Tell us what services and servers a service depends on, and is composed of
+
+# The filename is optionally used to match a service name or service yaml filename.  Used if name: isn't specified.
+
+# unique_identifier:       This just allows more than one definition per file. Make it meaningful
+#   name: service_name     Service we're describing dependencies for (name: from service yaml, or filename of service yaml)
+#   part_of_service: True  bool, indicating whether these are actual subcomponents of the service in question (true) or dependencies (false)
+#   services:              One or more services this depends on
+#     - service one        Use service name from service yaml, or filename of service yaml
+#   servers:               One or more servers this depends on
+#     - srv02.fqdn         It must match <CMDBPrefix>Hostname (fully qualified)
+#   properties:
+#     outage_impact:       Describe the impact of an outage for the server/services depended on
+
+# To clarify, part_of_service: True indicates you are defining subcomponents (:IsPartOf) of the named service
+#             part_of_service: False or not included, indicates a dependency (:DependsOn)
+
+# Here's an example using AD
+service:
+  part_of_service: True
+  servers:
+    - dc01.ad.contoso.com
+    - dc02.ad.contoso.com
+  properties:
+    load_balanced: True
+
+config:
+  services:
+    - dsc
+  properties:
+    outage_impact: No DSC based configuration updates
+
+names:
+  services:
+    - dns
+  properties:
+    outage_impact: No name resolution
+
