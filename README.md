@@ -2,6 +2,8 @@
 
 This is a janky CMDB-lite that uses PowerShell, neo4j, and a little duct-tape
 
+WARNING: This is at the _sufficient for demo purposes_ stage.  No tests.  Many assumptions.  Use at your own risk : )
+
 ## What can Dots do?
 
 Out of the box, we can query external sources for:
@@ -103,7 +105,7 @@ Clear-Neo4j
 
 ## What do I need to configure?
 
- Most configuration involves `Get-DotsConfig` and `Set-DotsConfig`
+Most configuration involves `Get-DotsConfig` and `Set-DotsConfig`
 
 Some things to consider:
 

@@ -1,0 +1,69 @@
+TOPIC
+    about_Dots
+
+SHORT DESCRIPTION
+    Dots is a module to help generate and maintain a mini CMDB
+
+DETAILED DESCRIPTION
+    Dots is a module to help generate and maintain a mini CMDB
+
+    It relies on a Neo4j database that you provide (see https://github.com/ramblingcookiemonster/dots for references)
+
+    Dots Configuration
+    ===========================================
+
+    Configure Dots with Set-DotsConfig, and view the running configuration with Get-DotsConfig
+
+    See Get-Help Set-DotsConfig -Full for information on each configuration parameter
+
+    Some things to consider:
+
+    * `ScriptsPath` and `DataPath` live under the module by default
+      Move these elsewhere to avoid losing them if you remove or update the module
+    * You might not have all of the data sources we support by default
+      Use `ScriptsToIgnore` to exclude these
+    * This DotsConfig data is serialized in a file identified via `Get-DotsConfigPath`
+    * We heavily use PSNeo4j.  You can use `Set-PSNeo4jConfiguration` and `Get-PSNeo4jConfiguration` to configure this
+      At a minimum, you'll need to specify the `BaseUri` and `Credential`
+
+    Default values when you initialize Dots:
+
+        CMDBPrefix      : Dots
+        ScriptsPath     : <Dots Module Path>/Scripts
+        DataPath        : <Dots Module Path>/Data
+        ScriptOrder     : {ADComputers, ADUsers, ADGroups, PuppetDB...} # All scripts under ScriptsPath
+        ScriptsToRun    :
+        ScriptsToIgnore :
+        ServerUnique    : DotsHostname
+        TestMode        : False
+
+
+
+    ==============================
+    IMPORTANT: Injection awareness
+    ==============================
+    ==============================
+    ==============================
+
+    We're basically looking for arbitrary PowerShell scripts in a path and running them.  If an attacker can modify or create scripts in this path, you're in trouble.
+
+    References
+    ==========
+
+    Handy PowerShell articles and projects using Neo4j:
+
+      * https://github.com/BloodHoundAD/BloodHound
+      * https://glennsarti.github.io/blog/graph-all-the-powershell-things/
+      * https://glennsarti.github.io/blog/using-neo4j-dotnet-client-in-ps/
+      * https://glennsarti.github.io/blog/powershell-neo4j-metrics/
+      * https://glennsarti.github.io/blog/neo4j-choco-blog/
+      * https://github.com/neo4j/neo4j/tree/3.2/packaging/standalone/src/main/distribution/shell-scripts/bin/Neo4j-Management
+
+    Handy Neo4j references (note: cypher refers to Neo4j's query language):
+
+      * http://neo4j.com/docs/cypher-refcard/current/
+      * https://neo4j.com/developer/cypher-query-language/
+      * http://neo4j.com/docs/developer-manual/current/
+      * http://neo4j.com/docs/rest-docs/current/
+      * https://neo4j.com/docs/developer-manual/current/http-api/
+
