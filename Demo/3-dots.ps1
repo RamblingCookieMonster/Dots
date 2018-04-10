@@ -1,4 +1,4 @@
-﻿Import-Module "/Users/wframe/sc/Dots/Dots" -Force
+﻿Import-Module Dots -Force
 
 # Change default neo4j/neo4j cred, update psneo4j module configuration
 $Password = ConvertTo-SecureString -String "some secure password" -AsPlainText -Force

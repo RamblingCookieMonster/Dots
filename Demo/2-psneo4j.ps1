@@ -1,8 +1,3 @@
-$DotsPath = 'E:\Dots'
-Import-Module $DotsPath\.requirements\psneo4j -Force
-
-Clear-Neo4j
-
 . .\Dots\Mock\Mocks.ps1
 Get-ADComputer
 

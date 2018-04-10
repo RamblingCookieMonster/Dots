@@ -38,8 +38,8 @@ function Set-DotsConfig {
     .PARAMETER Path
         If specified, save config file to this file path
         Defaults to
-          DotsConfig.xml in the user temp folder on Windows, or
-          .dotsconfig in the user's home directory on Linux/macOS
+          * DotsConfig.xml in the user temp folder on Windows, or
+          * .dotsconfig in the user's home directory on Linux/macOS
 
     .FUNCTIONALITY
         Dots

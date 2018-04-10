@@ -13,7 +13,7 @@ Import-Module PSNeo4j -Force
 $Password = ConvertTo-SecureString -String "some secure password" -AsPlainText -Force
 $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList neo4j, $Password
 Set-Neo4jPassword -Password $Credential.Password
-Set-PSNeo4jConfiguration -Credential $Credential -BaseUri 'http://127.0.0.1:7474'
+Set-PSNeo4jConfiguration  -Credential $Credential
 
 # Connecting from a remote host?
 # Uncomment dbms.connectors.default_listen_address=0.0.0.0

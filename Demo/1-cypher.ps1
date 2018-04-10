@@ -25,6 +25,7 @@ Nodes and relationships
 #>
 
 # We pre-populated Dots, more on that later
+# We'll run some Cypher queries with PSNeo4j
 Import-Module PSNeo4j -Force
 
 # Set initial password and psneo4j config
@@ -61,14 +62,15 @@ RETURN {
 }
 "@ -As Row
 
+# Browse?
+# http://192.168.99.100:7474/browser/
+
 # Clean up
 Invoke-Neo4jQuery -Query @"
 MATCH (n)
 DETACH DELETE n
 "@
 
-# Browse?
-# http://192.168.99.100:7474/browser/
 
 Clear-Neo4j # Does the same, also kills indexes and constraints
 
