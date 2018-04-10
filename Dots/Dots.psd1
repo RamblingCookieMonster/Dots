@@ -18,7 +18,7 @@ ModuleVersion = '0.0.1'
 # CompatiblePSEditions = @()
 
 # ID used to uniquely identify this module
-GUID = 'c3865322-a320-462a-b4b3-0439bb9f2b14'
+GUID = '65f1a6c3-c1cc-4a36-8354-f971a07adf52'
 
 # Author of this module
 Author = 'Warren Frame'
@@ -30,7 +30,7 @@ Author = 'Warren Frame'
 Copyright = '(c) 2018 Warren Frame. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'Simple PowerShell and Neo4j Based CMDB project'
+Description = 'PowerShell and Neo4j Based CMDB-lite'
 
 # Minimum version of the PowerShell engine required by this module
 PowerShellVersion = '5.0'
@@ -47,14 +47,14 @@ PowerShellVersion = '5.0'
 # Modules that must be imported into the global environment prior to importing this module
 RequiredModules = @(
     @{ModuleName="PSNeo4j"; ModuleVersion="0.0.26"},
-    @{ModuleName="powershell-yaml"; ModuleVersion="0.3.2"}
+    @{ModuleName="powershell-yaml"; ModuleVersion="0.3.3"}
 )
 
 # Format files (.ps1xml) to be loaded when importing this module
 # FormatsToProcess = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = '*'
+FunctionsToExport = @('Connect-TheDots','Get-DotsConfig','Get-DotsConfigPath','Get-DotsScript','Initialize-DotsConfig','Set-DotsConfig')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
@@ -83,7 +83,7 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        # ReleaseNotes = ''
+        ReleaseNotes = 'Initial get-it-working-for-a-demo-ish release.  Beware!'
 
     } # End of PSData hashtable
 
