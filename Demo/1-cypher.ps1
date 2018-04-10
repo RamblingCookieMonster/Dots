@@ -74,3 +74,4 @@ DETACH DELETE n
 
 Clear-Neo4j # Does the same, also kills indexes and constraints
 
+code ./Demo/2-psneo4j.ps1

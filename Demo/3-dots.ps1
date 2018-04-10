@@ -1,4 +1,5 @@
-﻿Import-Module Dots -Force
+﻿Install-Module Dots -Force
+Import-Module Dots -Force
 
 # Change default neo4j/neo4j cred, update psneo4j module configuration
 $Password = ConvertTo-SecureString -String "some secure password" -AsPlainText -Force
@@ -9,9 +10,9 @@ Set-PSNeo4jConfiguration -Credential $Credential -BaseUri 'http://192.168.99.100
 
 # Check dots config:
 Get-DotsConfig
-Set-DotsConfig -TestMode
 
 Get-Help Set-DotsConfig -Full
+Set-DotsConfig -TestMode
 
 # Important bits:
 #   TestMode:  Use Mock functions and data from Dots/Mock
@@ -27,3 +28,5 @@ Connect-TheDots -Confirm:$False
 
 # Dots itself works cross platform, but external sources might not (e.g. AD...)
 # We're using mock data via Set-DotsConfig -TestMode
+
+code ./Demo/4-tools.ps1

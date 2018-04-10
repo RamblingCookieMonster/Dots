@@ -25,23 +25,20 @@ Function Get-DotsConfig {
     .PARAMETER Path
         If specified, read config from this XML file.
 
-        Defaults to DotsConfig.xml in the user temp folder on Windows, or .psslack in the user's home directory on Linux/macOS
+        Defaults to DotsConfig.xml in the user temp folder on Windows, or .dotsconfig in the user's home directory on Linux/macOS
 
     .FUNCTIONALITY
         Dots
     #>
-    [cmdletbinding(DefaultParameterSetName = 'source')]
+    [cmdletbinding()]
     param(
-        [parameter(ParameterSetName='source')]
         [ValidateSet("DotsConfig","Xml")]
         $Source = "DotsConfig",
 
-        [parameter(ParameterSetName='path')]
-        [parameter(ParameterSetName='source')]
         $Path = $script:_DotsConfigXmlPath
     )
 
-    if($PSCmdlet.ParameterSetName -eq 'source' -and $Source -eq "DotsConfig" -and -not $PSBoundParameters.ContainsKey('Path')) {
+    if($Source -eq "DotsConfig" -and -not $PSBoundParameters.ContainsKey('Path')) {
         $Script:DotsConfig
     }
     else {

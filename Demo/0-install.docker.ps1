@@ -44,3 +44,5 @@ Get-Neo4jActiveConfig | Format-List
 docker kill dots
 docker rm dots
 Remove-Item /Users/wframe/neo4j/dots -Recurse -Force
+
+code ./Demo/1-cypher.ps1
