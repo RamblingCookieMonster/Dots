@@ -11,7 +11,10 @@ Set-PSNeo4jConfiguration -Credential $Credential -BaseUri 'http://192.168.99.100
 Get-DotsConfig
 Set-DotsConfig -TestMode
 
+Get-Help Set-DotsConfig -Full
+
 # Important bits:
+#   TestMode:  Use Mock functions and data from Dots/Mock
 #   ScriptsPath, DataPath:  You might want this outside the module folder!
 #   ScriptsToIgnore:  Lets you ignore data sources you don't have - e.g. PuppetDB
 
@@ -22,10 +25,5 @@ Connect-TheDots -WhatIf -DataSource DotsSources
 
 Connect-TheDots -Confirm:$False
 
-# http://192.168.99.100:7474
-#   * Favorites -> Data Profiling -> 'What is related, and how'
-
 # Dots itself works cross platform, but external sources might not (e.g. AD...)
 # We're using mock data via Set-DotsConfig -TestMode
-
-Clear-Neo4j

@@ -22,7 +22,7 @@ Get-ADComputer | New-Neo4jNode -Label Server -Passthru
 Set-Neo4jNode -Label Server -Hash @{ Name = 'psbot01'} -InputObject @{
     CanonicalName = 'ad.contoso.com/Test/psbot01'
     ExtraData = 'why would you even add this!'
-} # -NoCreate
+} # -NoCreate - e.g.... racktables
 
 # See what we have
 Invoke-Neo4jQuery -Query @"
@@ -45,5 +45,5 @@ New-Neo4jRelationship -LeftLabel Server -LeftHash @{DNSHostname = 'dc02.ad.conto
                       -Properties @{
                           LoadBalanced = $True
                           HighlyAvailable = $True
-                      } -Passthru
+                      } -Passthru -Verbose
 
