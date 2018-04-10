@@ -85,7 +85,7 @@ foreach($file in $files) {
                 LeftHash = @{ADSamAccountName = $Principal}
                 Properties = $Principals[$Principal]
             }
-            $Output = New-Neo4jRelationship @LeftParams @Params -Passthru -verbose
+            $Output = New-Neo4jRelationship @LeftParams @Params -Passthru
             Test-BadOutput -Ingestor $MyInvocation.MyCommand.Name `
                            -YamFile $File `
                            -DataHash $($PrincipalData | Out-String) `

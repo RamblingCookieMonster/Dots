@@ -2,7 +2,7 @@
 
 This is a janky CMDB-lite that uses PowerShell, neo4j, and a little duct-tape
 
-WARNING: This is at the _sufficient for demo purposes_ stage.  No tests.  Many assumptions.  Use at your own risk : )
+_WARNING_: This is at the _maybe sufficient for demo purposes_ stage.  No tests.  Many assumptions.  Use at your own risk : )
 
 ## What can Dots do?
 
@@ -10,7 +10,7 @@ Out of the box, we can query external sources for:
 
 * `Servers`, via
   * Active Directory computer accounts
-  * PuppetDB nodes and facts
+  * PuppetDB nodes and facts (soon)
 * `Users`, via
   * Active Directory user accounts
 * `Groups`, via
@@ -31,7 +31,7 @@ We can also define data where Dots is the source of truth:
 * Install neo4j somewhere
   * [Chocolatey](Demo/0-install.chocolatey.ps1), [docker](0-install.docker.ps1) examples
   * Glenn's references on [chocolatey](https://glennsarti.github.io/blog/graph-all-the-powershell-things/) or [a Neo4j Enterprise cluster in docker for Windows](https://glennsarti.github.io/blog/neo4j-nano-containers/).
-  * Anything else.  Neo4j and Dots don't require Windows
+  * Neo4j doesn't require Windows!
 
 * Install and configure Dots
 
@@ -39,13 +39,13 @@ We can also define data where Dots is the source of truth:
 # Install Dots and required modules - powershell-yaml and psneo4j
 Install-Module Dots
 
-# Change from the initial neo4j:neo4j creds
+# Configure PSNeo4j URI
+Set-PSNeo4jConfiguration -BaseUri 'http://127.0.0.1:7474' # likely 'http://192.168.99.100:7474' for docker machine, etc.
+
+# Change from the initial neo4j:neo4j creds, save config
 $Credential = Get-Credential -UserName neo4j -Message 'Password for user neo4j'
 Set-Neo4jPassword -Password $Credential.Password
-
-# Configure PSNeo4j
-$BaseUri = 'http://192.168.99.100:7474' # or 'http://127.0.0.1:7474', etc.
-Set-PSNeo4jConfiguration -Credential $Credential -BaseUri $BaseUri
+Set-PSNeo4jConfiguration -Credential $Credential
 
 # Are we connected?
 Get-Neo4jUser
@@ -57,6 +57,8 @@ Get-DotsConfig
 ### Using Dots
 
 ```powershell
+# Assumption: You've already Set-PSNeo4jConfiguration to the right BaseUri/credential
+
 Import-Module Dots -Force
 
 # Check the default configs
@@ -114,7 +116,7 @@ Some things to consider:
 * This DotsConfig data is serialized in a file identified via `Get-DotsConfigPath`
 * We heavily use PSNeo4j.  You can use `Set-PSNeo4jConfiguration` and `Get-PSNeo4jConfiguration` to configure this.  At a minimum, you'll need to specify the `BaseUri` and `Credential`
 
-## Does this support <insert technology>?
+## Does this support \<insert technology>?
 
 This is up to you!  Ultimately, `Connect-TheDots` will run whatever you put in the `ScriptsPath`s.
 
@@ -132,4 +134,4 @@ You might consider:
 I'll generally be happy to accept extensions directly to this project, with the caveat that:
 
 * I might be somewhat picky about property names and prefixes, if you're adding to an existing node label
-* I might not include your script in the default whitelist of scripts to run
+* I might add your script in the default ScriptsToIgnore list if it's a niche data source

@@ -31,7 +31,6 @@ $Unique = "${Prefix}${MergeProperty}"
 $Date = Get-Date
 $CruftDate = $Date.AddYears(-$ExcludeOlderThanMonths)
 # Dot source so module import is available in this scope
-Get-Variable -Scope Script | Out-String
 if($Script:TestMode) {
     Write-Verbose "Using mock functions from $ModuleRoot/Mock/Mocks.ps1"
     . "$ModuleRoot/Mock/Mocks.ps1"

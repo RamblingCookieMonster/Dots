@@ -67,7 +67,7 @@ function Initialize-DotsConfig {
                                   'Service',
                                   'Service-DependsOn' ),
         [string[]]$ScriptsToRun,
-        [string[]]$ScriptsToIgnore,
+        [string[]]$ScriptsToIgnore = @('PuppetDB', 'ScheduledTask'),
         [string]$ServerUnique, # Default is computed below
         [switch]$TestMode,
         [string]$Path = $script:_DotsConfigXmlpath
