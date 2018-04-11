@@ -1,6 +1,6 @@
 # Dots
 
-This is a janky CMDB-lite that uses PowerShell, neo4j, and a little duct-tape
+This is a janky, POC CMDB-lite that uses PowerShell, neo4j, and a little duct-tape
 
 _WARNING_: This is at the _maybe sufficient for demo purposes_ stage.  No tests.  Many assumptions.  Use at your own risk : )
 
@@ -23,6 +23,8 @@ We can also define data where Dots is the source of truth:
 * `Services` i.e. Active Directory, not NTDS
 * `Service composition` i.e. what servers or services make up a service
 * `Service dependencies` i.e. what servers and services does a service depend on
+
+We take all this information, and connect the dots with Neo4j and some sloppy code
 
 ## How do I get Started?
 
@@ -114,15 +116,15 @@ Some things to consider:
 * `ScriptsPath` and `DataPath` live under the module by default.  Move these elsewhere to avoid losing them if you remove or update the module
 * You might not have all of the data sources we support by default.  Use `ScriptsToIgnore` to exclude these
 * This DotsConfig data is serialized in a file identified via `Get-DotsConfigPath`
-* We heavily use PSNeo4j.  You can use `Set-PSNeo4jConfiguration` and `Get-PSNeo4jConfiguration` to configure this.  At a minimum, you'll need to specify the `BaseUri` and `Credential`
+* We heavily use [PSNeo4j](https://github.com/RamblingCookieMonster/PSNeo4j).  You can use `Set-PSNeo4jConfiguration` and `Get-PSNeo4jConfiguration` to configure this.  At a minimum, you'll need to specify the `BaseUri` and `Credential`
 
 ## Does this support \<insert technology>?
 
-This is up to you!  Ultimately, `Connect-TheDots` will run whatever you put in the `ScriptsPath`s.
+This is up to you!  Ultimately, `Connect-TheDots` will run whatever you put in the `ScriptsPath`s (Danger!)
 
 You might consider:
 
-* Submitting an issue with the idea, including
+* Submitting an issue with your idea, including
   * What it should create (nodes, relationships, both)
   * What it creates:
     * Node label, and if label exists, consider a common prefix

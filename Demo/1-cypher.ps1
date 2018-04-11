@@ -44,7 +44,7 @@ RETURN n
 Invoke-Neo4jQuery -Query @"
 MATCH (s:Server)-[r:IsPartOf]->(svc:Service)
 RETURN s,r,svc
-"@ | Format-List -Force
+"@ | Format-List
 
 # Examples building different output
 Invoke-Neo4jQuery -Query @"
