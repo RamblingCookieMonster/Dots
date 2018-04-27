@@ -186,8 +186,8 @@ function Get-ScheduledTasks {
         Action = 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
         Arguments = '-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "C:\tasks\Watch-PSBot.ps1"'
         UserId = 'NT AUTHORITY\System'
-        LastRunTime = Get-Date "2/26/2018 9:03:27 PM"
-        NextRunTime = Get-Date "2/26/2018 9:13:28 PM"
+        LastRunTime = Get-Date "2018-02-26T21:03:27Z"
+        NextRunTime = Get-Date "2018-02-26T21:13:28Z"
         Status = 'Ready'
         Author = 'contoso\wframe'
         RunLevel = 'HighestAvailable'
