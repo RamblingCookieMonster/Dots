@@ -2,7 +2,9 @@
 # not really appropriate for a production environment!
 
 # Bootstrap chocolatey, install neo4j with defaults
-Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+if ($(try{[void](choco);$false}catch{$true})){
+	Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+}
 choco install neo4j-community -y
 
 # Get PSNeo4j
