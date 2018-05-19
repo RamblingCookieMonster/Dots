@@ -47,7 +47,7 @@ function Set-DotsConfig {
     [cmdletbinding()]
     param(
         [string]$CMDBPrefix,
-        [string]$DataPath,
+        [string[]]$DataPath,
         [string]$ScriptsPath,
         [string[]]$ScriptOrder,
         [string[]]$ScriptsToRun,
