@@ -16,6 +16,10 @@ function Set-DotsConfig {
         If more than one ScriptsPath is specified and duplicate script names are found,
         we pick the first script found
 
+    .PARAMETER IncludeDotsScripts
+        Whether to include Dots/Scripts in functions that use ScriptsPath
+        Defaults to $true
+
     .PARAMETER DataPath
         Path to yaml data where Dots is the source of truth
 
@@ -52,6 +56,7 @@ function Set-DotsConfig {
         [string]$CMDBPrefix,
         [string[]]$DataPath,
         [string[]]$ScriptsPath,
+        [bool]$IncludeDotsScripts,
         [string[]]$ScriptOrder,
         [string[]]$ScriptsToRun,
         [string[]]$ScriptsToIgnore,
@@ -62,14 +67,15 @@ function Set-DotsConfig {
 
     Switch ($PSBoundParameters.Keys)
     {
-        'CMDBPrefix'      { $Script:DotsConfig.CMDBPrefix = $CMDBPrefix }
-        'DataPath'        { $Script:DotsConfig.DataPath = [string[]]$DataPath }
-        'ScriptsPath'     { $Script:DotsConfig.ScriptsPath = [string[]]$ScriptsPath }
-        'ScriptOrder'     { $Script:DotsConfig.ScriptOrder = [string[]]$ScriptOrder }
-        'ScriptsToRun'    { $Script:DotsConfig.ScriptsToRun = [string[]]$ScriptsToRun }
-        'ScriptsToIgnore' { $Script:DotsConfig.ScriptsToIgnore = [string[]]$ScriptsToIgnore }
-        'ServerUnique'    { $Script:DotsConfig.ServerUnique = $ServerUnique }
-        'TestMode'        { $Script:DotsConfig.TestMode = [bool]$TestMode }
+        'CMDBPrefix'         { $Script:DotsConfig.CMDBPrefix = $CMDBPrefix }
+        'DataPath'           { $Script:DotsConfig.DataPath = [string[]]$DataPath }
+        'ScriptsPath'        { $Script:DotsConfig.ScriptsPath = [string[]]$ScriptsPath }
+        'IncludeDotsScripts' { $Script:DotsConfig.IncludeDotsScripts = $IncludeDotsScripts }
+        'ScriptOrder'        { $Script:DotsConfig.ScriptOrder = [string[]]$ScriptOrder }
+        'ScriptsToRun'       { $Script:DotsConfig.ScriptsToRun = [string[]]$ScriptsToRun }
+        'ScriptsToIgnore'    { $Script:DotsConfig.ScriptsToIgnore = [string[]]$ScriptsToIgnore }
+        'ServerUnique'       { $Script:DotsConfig.ServerUnique = $ServerUnique }
+        'TestMode'           { $Script:DotsConfig.TestMode = [bool]$TestMode }
     }
     # Create variables for config props, for convenience
     foreach($Prop in $DotsProps) {

@@ -42,8 +42,4 @@ foreach($Prop in $DotsProps) {
     Set-Variable -Name $Prop -Value $DotsConfig.$Prop -Force
 }
 
-# Resolve paths we'll use somewhat often
-$ExternalSourcesScriptPath = (Resolve-Path "$ScriptsPath\ExternalSources").Path
-$DotsSourcesScriptPath = (Resolve-Path "$ScriptsPath\DotsSources").Path
-
 Export-ModuleMember -Function $Public.Basename

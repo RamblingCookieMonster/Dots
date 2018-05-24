@@ -51,8 +51,13 @@ function Get-DotsScript {
         [string[]]$Include,
         [string[]]$Exclude,
         [hashtable]$Dependencies,
-        [string[]]$ScriptsPath = $Script:ScriptsPath
+        [string[]]$ScriptsPath = $Script:ScriptsPath,
+        [bool]$IncludeDotsScripts = $Script:IncludeDotsScripts
     )
+    if($IncludeDotsScripts) {
+        $ScriptsPath += Join-Path $ModuleRoot Scripts | Select-Object -Unique
+    }
+
     # This bit will ensure one script per base name, with priority based on ScriptsPath
     # (i.e. First name found based on ScriptsPath wins)
     $ScriptsMap = [ordered]@{}
@@ -90,11 +95,11 @@ function Get-DotsScript {
         Write-Verbose "Excluding ScriptsToIgnore (see Get-DotsConfig) scripts: $($Scripts.FullName | Out-String)"
     }
     if($DataSource -eq 'ExternalSources') {
-        $Scripts = $Scripts | Where-Object {$_.FullName -like "$Script:ExternalSourcesScriptPath*"}
+        $Scripts = $Scripts | Where-Object {$_.FullName -like "*ExternalSources\*.ps1"}
         Write-Verbose "Including only ExternalSources scripts: $($Scripts.FullName | Out-String)"
     }
     if($DataSource -eq 'DotsSources') {
-        $Scripts = $Scripts | Where-Object {$_.FullName -like "$Script:DotsSourcesScriptPath*" }
+        $Scripts = $Scripts | Where-Object {$_.FullName -like "*DotsSources\*.ps1" }
         Write-Verbose "Including only DotsSources scripts: $($Scripts.FullName | Out-String)"
     }
     if($Include) {

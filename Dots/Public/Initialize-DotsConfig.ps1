@@ -20,7 +20,13 @@ function Initialize-DotsConfig {
     .PARAMETER ScriptsPath
         Path to scripts that pull external and Dots data
         Must include scripts in respective subfolders: ExternalSources, DotsSources
-        Defaults to Dots/Scripts
+        Defaults to empty
+
+        IncludeDotsScripts $True effectively adds the Dots module Dots/Scripts path to this
+
+    .PARAMETER IncludeDotsScripts
+        Whether to include Dots/Scripts in functions that use ScriptsPath
+        Defaults to $true
 
     .PARAMETER DataPath
         Path to yaml data where Dots is the source of truth
@@ -59,7 +65,8 @@ function Initialize-DotsConfig {
     param(
         [string]$CMDBPrefix = 'Dots',
         [string]$DataPath = $(Join-Path $ModuleRoot 'Data'),
-        [string]$ScriptsPath = $(Join-Path $ModuleRoot 'Scripts'),
+        [string]$ScriptsPath = $null,
+        [bool]$IncludeDotsScripts = $true,
         [string[]]$ScriptOrder = @( 'ADComputers',
                                   'ADUsers',
                                   'ADGroups',
@@ -77,14 +84,15 @@ function Initialize-DotsConfig {
     }
     Switch ($DotsProps)
     {
-        'CMDBPrefix'      { $Script:DotsConfig.CMDBPrefix = $CMDBPrefix }
-        'DataPath'        { $Script:DotsConfig.DataPath = $DataPath }
-        'ScriptsPath'     { $Script:DotsConfig.ScriptsPath = $ScriptsPath }
-        'ScriptOrder'     { $Script:DotsConfig.ScriptOrder = [string[]]$ScriptOrder }
-        'ScriptsToRun'    { $Script:DotsConfig.ScriptsToRun = [string[]]$ScriptsToRun }
-        'ScriptsToIgnore' { $Script:DotsConfig.ScriptsToIgnore = [string[]]$ScriptsToIgnore }
-        'ServerUnique'    { $Script:DotsConfig.ServerUnique = $ServerUnique }
-        'TestMode'        { $Script:DotsConfig.TestMode = [bool]$TestMode }
+        'CMDBPrefix'         { $Script:DotsConfig.CMDBPrefix = $CMDBPrefix }
+        'DataPath'           { $Script:DotsConfig.DataPath = [string[]]$DataPath }
+        'ScriptsPath'        { $Script:DotsConfig.ScriptsPath = [string[]]$ScriptsPath }
+        'IncludeDotsScripts' { $Script:DotsConfig.IncludeDotsScripts = $IncludeDotsScripts }
+        'ScriptOrder'        { $Script:DotsConfig.ScriptOrder = [string[]]$ScriptOrder }
+        'ScriptsToRun'       { $Script:DotsConfig.ScriptsToRun = [string[]]$ScriptsToRun }
+        'ScriptsToIgnore'    { $Script:DotsConfig.ScriptsToIgnore = [string[]]$ScriptsToIgnore }
+        'ServerUnique'       { $Script:DotsConfig.ServerUnique = $ServerUnique }
+        'TestMode'           { $Script:DotsConfig.TestMode = [bool]$TestMode }
     }
 
     # Create variables for config props, for convenience
