@@ -13,6 +13,9 @@ function Set-DotsConfig {
         Path to scripts that pull external and Dots data
         Must include scripts in respective subfolders: ExternalSources, DotsSources
 
+        If more than one ScriptsPath is specified and duplicate script names are found,
+        we pick the first script found
+
     .PARAMETER DataPath
         Path to yaml data where Dots is the source of truth
 
@@ -48,7 +51,7 @@ function Set-DotsConfig {
     param(
         [string]$CMDBPrefix,
         [string[]]$DataPath,
-        [string]$ScriptsPath,
+        [string[]]$ScriptsPath,
         [string[]]$ScriptOrder,
         [string[]]$ScriptsToRun,
         [string[]]$ScriptsToIgnore,
@@ -60,8 +63,8 @@ function Set-DotsConfig {
     Switch ($PSBoundParameters.Keys)
     {
         'CMDBPrefix'      { $Script:DotsConfig.CMDBPrefix = $CMDBPrefix }
-        'DataPath'        { $Script:DotsConfig.DataPath = $DataPath }
-        'ScriptsPath'     { $Script:DotsConfig.ScriptsPath = $ScriptsPath }
+        'DataPath'        { $Script:DotsConfig.DataPath = [string[]]$DataPath }
+        'ScriptsPath'     { $Script:DotsConfig.ScriptsPath = [string[]]$ScriptsPath }
         'ScriptOrder'     { $Script:DotsConfig.ScriptOrder = [string[]]$ScriptOrder }
         'ScriptsToRun'    { $Script:DotsConfig.ScriptsToRun = [string[]]$ScriptsToRun }
         'ScriptsToIgnore' { $Script:DotsConfig.ScriptsToIgnore = [string[]]$ScriptsToIgnore }

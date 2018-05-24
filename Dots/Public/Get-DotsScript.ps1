@@ -30,6 +30,9 @@ function Get-DotsScript {
         Path to look for scripts in
         Must include ExternalSources and DotsSources subfolder for -DataSource to work
 
+        If more than one ScriptsPath is specified and duplicate script names are found,
+        we pick the first script found
+
     .EXAMPLE
         Get-DotsScript
         # Show all Dots scripts
@@ -47,9 +50,21 @@ function Get-DotsScript {
         [string]$DataSource,
         [string[]]$Include,
         [string[]]$Exclude,
-        [hashtable]$Dependencies
+        [hashtable]$Dependencies,
+        [string[]]$ScriptsPath = $Script:ScriptsPath
     )
-    $Scripts = Get-ChildItem $ScriptsPath -Recurse -Include *.ps1
+    # This bit will ensure one script per base name, with priority based on ScriptsPath
+    # (i.e. First name found based on ScriptsPath wins)
+    $ScriptsMap = [ordered]@{}
+    foreach($Path in $ScriptsPath) {
+        $Scripts = Get-ChildItem $ScriptsPath -Recurse -Include *.ps1
+        foreach($Script in $Scripts) {
+            if($ScriptsMap.Keys -notcontains $Script.BaseName){
+                $ScriptsMap.add($Script.BaseName, $Script)
+            }
+        }
+    }
+    $Scripts = $ScriptsMap.Values
     Write-Verbose "Found scripts $($Scripts.FullName | Out-String)"
     if($Script:ScriptsToRun.count -gt 0) {
         $Scripts = foreach($Script in $Scripts) {
