@@ -16,6 +16,7 @@ Foreach($import in @($Public + $Private)) {
 $DotsProps = 'CMDBPrefix',
              'ScriptsPath',
              'DataPath',
+             'IncludeDotsScripts',
              'ScriptOrder',
              'ScriptsToRun',
              'ScriptsToIgnore',
