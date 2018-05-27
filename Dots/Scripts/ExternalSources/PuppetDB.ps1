@@ -20,10 +20,6 @@ param(
     [object[]]$Transforms = @(
         '*',
         @{
-            label = "UpdateDate"
-            expression = {$Date}
-        },
-        @{
             label='NameLower'
             expression={$Node.certname.ToLower()}
         },
@@ -52,7 +48,7 @@ if($script:TestMode) {
 else {
     . Import-RequiredModule PSPuppetDB -ErrorAction Stop
 }
-
+$Date = Get-Date
 $Nodes = Get-PDBNode
 
 $TotalCount = $Nodes.count
