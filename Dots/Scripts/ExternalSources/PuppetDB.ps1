@@ -4,7 +4,7 @@ param(
     [string]$MergeProperty = 'NameLower',
     [string]$Label = 'Server',
     [string[]]$Properties = @(
-        'certname'
+        'certname',
         'ipaddress',
         'osfamily',
         'environment',
