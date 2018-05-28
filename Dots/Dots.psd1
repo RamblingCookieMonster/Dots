@@ -46,8 +46,8 @@ PowerShellVersion = '5.0'
 
 # Modules that must be imported into the global environment prior to importing this module
 RequiredModules = @(
-    @{ModuleName="PSNeo4j"; ModuleVersion="0.0.26"},
-    @{ModuleName="powershell-yaml"; ModuleVersion="0.3.3"}
+    @{ModuleName="PSNeo4j"; ModuleVersion="0.0.29"},
+    @{ModuleName="powershell-yaml"; ModuleVersion="0.3.4"}
 )
 
 # Format files (.ps1xml) to be loaded when importing this module
