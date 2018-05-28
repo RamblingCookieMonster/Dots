@@ -1,0 +1,35 @@
+# What users/groups can or must approve group memberships?
+
+# group_name_or_regex:      This can be the exact samaccountname, or use regex, if you specify regex in Parameters:
+#   approvers:              This is an array of samaccountnames
+#     - someusername        It can be users
+#     - somegroupname       It can be groups
+#   properties:
+#     must_approve:         Whether approval is mandated (vs. has access to approve)
+#     data_security_level:  Data security level (1,2,5)
+#     description:          Some short helpful description or URL
+#   parameters:
+#     regex: True           If this is set, use =~ comparison for group names
+
+# The filename isn't used at all, just a way to group related things
+
+
+# somemanager must approve membership for any group starting departmentx-
+'departmentx-.*':
+  approvers:
+    - somemanager
+  properties:
+    must_approve: True
+    data_security_level: 4
+    description: access to folders with level 3 and level 4 data,
+  parameters:
+    regex: True
+
+# somemanager must approve group membership for departmentx
+'departmentx':
+  approvers:
+    - hyin
+  properties:
+    must_approve: True
+    data_security_level: 4
+    description: access to subnet and servers with level 3 and level 4 data
