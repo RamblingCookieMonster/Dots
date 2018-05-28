@@ -5,7 +5,6 @@
         AddToPath = $True
     }
 
-    # Grab some modules without depending on PowerShellGet
     'psake' = @{
         DependencyType = 'PSGalleryNuget'
         Version = '4.7.0'
