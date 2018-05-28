@@ -30,6 +30,20 @@ function Connect-TheDots {
             DataSource1 = 'DataSourceFirst1', 'DataSourceFirst2'
         }
 
+    .PARAMETER ScriptParameters
+        A way to set parameters for Dots scripts
+
+        # Generally:
+        -ScriptParameters @{
+            DotsScriptName = @{
+                Some = 'Parameters'
+                To   = 'Splat'
+            }
+            DotsScriptName2 = @{
+                Another = 'one'
+            }
+        }
+
     .EXAMPLE
         Connect-TheDots -Whatif
         # Show what would happen if we ran Connect-TheDots
@@ -42,6 +56,20 @@ function Connect-TheDots {
         Connect-TheDots -Include ADComputers
         # Connect only the ADComputers dots
 
+    .EXAMPLE
+        Connect-TheDots -ScriptParameters @{
+            Racktables = @{
+                BaseUri = 'https://fqdn.racktables/rackfacts/systems
+            }
+            ADComputers = @{
+                ExcludeOlderThanMonths = 3
+            }
+        }
+
+        # Run Connect-TheDots, and set...
+           # the BaseUri parameter on the RackTables script
+           # the ExcludeOlderThanMonths parameter on the ADComputers script
+
     .FUNCTIONALITY
         Dots
     #>
@@ -53,6 +81,7 @@ function Connect-TheDots {
         [string[]]$Include,
         [string[]]$Exclude,
         [hashtable]$Dependencies,
+        [hashtable[]]$ScriptParameters,
         [switch]$Show
     )
     $GetScriptParams = @{}
@@ -69,8 +98,13 @@ function Connect-TheDots {
                                       "Connecting dots" )
         ) {
             try {
-                Write-Verbose "Dot sourcing [$Script]"
-                . $Script -ErrorAction Stop
+                $Basename = $Script.Basename
+                $Params = @{ErrorAction = 'Stop'}
+                if($ScriptParameters.ContainsKey($Basename) -and $ScriptParameters.$Basename -is [hashtable]){
+                    $Params = $ScriptParameters.$Basename
+                }
+                Write-Verbose "Dot sourcing [$($Script.Fullname)] with params`n $($Params | Out-String)"
+                . $Script.FullName @Params
             }
             catch {
                 Write-Error $_
