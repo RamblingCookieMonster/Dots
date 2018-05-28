@@ -12,8 +12,8 @@
         Defaults to Users, Admins, Owners, Data_Owners
 
     .PARAMETER Path
-        Path to yaml files
-        Defaults to DataPath\Service\*.yml
+        Path to yaml files.  Defaults to DataPath\Service\*.yml
+        We append Service/*.yml to this path
 
         If TestMode is set, we override this to Dots/Mock/Data/*.yml
     .FUNCTIONALITY
