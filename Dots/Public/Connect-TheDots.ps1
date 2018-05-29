@@ -100,7 +100,7 @@ function Connect-TheDots {
             try {
                 $Basename = $Script.Basename
                 $Params = @{ErrorAction = 'Stop'}
-                if($ScriptParameters.ContainsKey($Basename) -and $ScriptParameters.$Basename -is [hashtable]){
+                if($PSBoundParameters.ContainsKey('ScriptParameters') -and $ScriptParameters.ContainsKey($Basename) -and $ScriptParameters.$Basename -is [hashtable]){
                     $Params = $ScriptParameters.$Basename
                 }
                 Write-Verbose "Dot sourcing [$($Script.Fullname)] with params`n $($Params | Out-String)"
