@@ -14,7 +14,11 @@ param(
         'location_row',
         'kernelrelease',
         'group',
-        'puppet_classes'
+        'puppet_classes',
+        'manufacturer',
+        'productname',
+        'memorysize_mb',
+        'puppetversion'
     ),
     [string[]]$Excludes = 'puppet_classes',
     [object[]]$Transforms = @(
@@ -37,6 +41,28 @@ param(
                 }
                 $Classes | Sort -Unique
             }
+        },
+        @{
+            label='FactsTimestamp'
+            expression={
+                try{
+                    Get-Date $node.'facts-timestamp'
+                }
+                catch {
+                    $node.'facts-timestamp'
+                }
+            }
+        },
+        @{
+            label='ReportTimestamp'
+            expression={
+                try{
+                    Get-Date $node.'report-timestamp'
+                }
+                catch {
+                    $node.'report-timestamp'
+                }
+            }
         }
     )
 )
@@ -48,11 +74,14 @@ if($script:TestMode) {
 else {
     . Import-RequiredModule PSPuppetDB -ErrorAction Stop
 }
+Write-Verbose "Querying for all puppet nodes"
 $Date = Get-Date
 $Nodes = Get-PDBNode
 
 $TotalCount = $Nodes.count
 $Count = 0
+Write-Verbose "Adding or updating $TotalCount nodes from Puppet data"
+
 $Nodes = foreach($Node in $Nodes) {
     Write-Progress -Activity "Getting Puppet info" -Status  "Getting $($Node.Name)" -PercentComplete (($Count / $TotalCount)*100)
     $Count++

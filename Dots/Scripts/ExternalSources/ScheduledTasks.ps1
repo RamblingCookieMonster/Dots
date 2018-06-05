@@ -17,22 +17,17 @@ param(
         'RunLevel',
         'Description'
     ),
-    [string[]]$Excludes = 'Path',
+    [string[]]$Excludes,
     [object[]]$Transforms = @(
         '*',
-        @{
-            label = 'TaskPath'
-            expression = {
-                $_.Path -replace "^/"
-            }
-        },
         @{
             label = 'Hostname'
             expression = {
                 $_.ComputerName.ToLower()
             }
         }
-    )
+    ),
+    [string]$DataPath
 )
 $Date = Get-Date
 # Dot source so module import is available in this scope
@@ -43,14 +38,18 @@ if($Script:TestMode) {
 <#
     Import or define code to get all scheduled tasks
     Consider:
-        local scripts that push to a limited access share (domain computers create, creator owner fullish), read from there
-        delegated/constrained endpoints that avoid exposing creds to mimikatz
-        other options that don't give the remote systems your creds...
+        * local scripts that push to a limited access share (domain computers create, creator owner fullish), read from there
+        * delegated/constrained endpoints that avoid exposing creds to mimikatz
+        * other options that don't give the remote systems your creds...
 #>
 
-[object[]]$Tasks = Get-ScheduledTasks |
-    Select-Object -Property $Properties |
-    Select-Object -Property $Transforms -ExcludeProperty $Excludes
+$Files = Get-ChildItem $DataPath
+$Tasks = foreach($File in $Files){
+    Import-Clixml $File |
+        Where-Object {$_.ComputerName -and $_.Path -and $_.Action} |
+        Select-Object -Property $Properties |
+        Select-Object -Property $Transforms -ExcludeProperty $Excludes
+}
 
 $Tasks = Foreach($Task in $Tasks) {
     $Output = Add-PropertyPrefix -Prefix $Prefix -Object $Task
@@ -66,21 +65,20 @@ Foreach($Task in $Tasks) {
 
     Set-Neo4jNode -InputObject $Task -Label $Label -Hash @{
         TSKHostname = $Task.TSKHostname
-        TSKTaskPath = $Task.TSKTaskPath
+        TSKPath = $Task.TSKPath
     }
 
     # hostname's not unique across all qualified doman namespaces?  Use different logic
     New-Neo4jRelationship -LeftQuery "MATCH (left:Task)
                                       WHERE left.TSKHostname = {TSKHostname} AND
-                                            left.TSKTaskPath = {TSKTaskPath}" `
+                                            left.TSKPath = {TSKPath}" `
                           -RightQuery "MATCH (right:Server)
                           WHERE right.${script:CMDBPrefix}Hostname STARTS WITH {Start}" `
                           -Parameters  @{
                               TSKHostname = $Task.TSKHostname
-                              TSKTaskPath = $Task.TSKTaskPath
+                              TSKPath = $Task.TSKPath
                               Start = "$($Task.TSKHostname)." # Assumes host names are unique across all domains
                           } `
                           -Type RunsOn
-
 }
 
