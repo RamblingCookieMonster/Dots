@@ -1,3 +1,65 @@
+<#
+.SYNOPSIS
+    Pull serialized Scheduled Tasks data, add to Neo4j
+
+.DESCRIPTION
+    Pull serialized Scheduled Tasks data, add to Neo4j
+
+    * Assumes properties line up with Get-ScheduledTasks from the WFTools module in the PowerShell Gallery
+    * Assumes data is serialized via Export-CliXml to one or more paths
+
+    This is quite opinionated.  We prefer this route to directly connecting to nodes.  An example implementation:
+    * A central limited access share accessible by all computers.  Perhaps domain computers create, creator owner fullish
+    * GPO creates scheduled task on all computers
+    * Scheduled task collects scheduled tasks from the local computer, exports clixml to limited access share
+
+    This is invoked by Connect-TheDots
+
+.PARAMETER Prefix
+    Prefix to append to properties when we add them to Neo4j
+
+    This helps identify properties that might come from mutiple sources, or where the source is ambiguous
+
+    For example, Description becomes TSKDescription
+
+    Defaults to TSK.  Change at your own risk
+
+.PARAMETER Label
+    What label do we assign the data we pull?
+
+    Defaults to Task.  Change at your own risk
+
+.PARAMETER Properties
+    Properties to extract and select from scheduled task data
+
+.PARAMETER Excludes
+    Properties to exclude (in line with transforms)
+
+.PARAMETER Transforms
+    Properties to select again (in line with excludes)
+
+    Example:
+
+        '*',
+        @{
+            label = 'Hostname'
+            expression = {
+                $_.ComputerName.ToLower()
+            }
+        }
+
+    This would keep all properties from -Properties, and add a calculated Hostname
+
+.PARAMETER DataPath
+    One or more paths to data holding clixml for scheduled tasks.  Maps to Get-ChildItem Path (i.e. -Path $DataPath)
+
+    For example:
+    '\\Path\To\Share\task_*.xml'
+    '\\Path\To\Share\tasks\*.xml'
+
+.FUNCTIONALITY
+    Dots
+#>
 [cmdletbinding()]
 param(
     [string]$Prefix = 'TSK',
@@ -27,7 +89,7 @@ param(
             }
         }
     ),
-    [string]$DataPath
+    [string[]]$DataPath
 )
 $Date = Get-Date
 # Dot source so module import is available in this scope
@@ -35,13 +97,6 @@ if($Script:TestMode) {
     Write-Verbose "Using mock functions from $ModuleRoot/Mock/Mocks.ps1"
     . "$ModuleRoot/Mock/Mocks.ps1"
 }
-<#
-    Import or define code to get all scheduled tasks
-    Consider:
-        * local scripts that push to a limited access share (domain computers create, creator owner fullish), read from there
-        * delegated/constrained endpoints that avoid exposing creds to mimikatz
-        * other options that don't give the remote systems your creds...
-#>
 
 $Files = Get-ChildItem $DataPath
 $Tasks = foreach($File in $Files){

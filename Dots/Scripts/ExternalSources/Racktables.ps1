@@ -1,3 +1,68 @@
+<#
+.SYNOPSIS
+    Pull Racktables data, add to Neo4j
+
+.DESCRIPTION
+    Pull Racktables data, add to Neo4j
+
+    This is invoked by Connect-TheDots
+
+.PARAMETER Prefix
+    Prefix to append to properties when we add them to Neo4j
+
+    This helps identify properties that might come from mutiple sources, or where the source is ambiguous
+
+    For example, row becomes RACKrow
+
+    Defaults to RACK.
+
+.PARAMETER MergeProperty
+    We use this to correlate Server data from multiple sources
+
+    We assume server data should correlate if the value for this on a Racktables system matches the ServerUnique value in Neo4j
+
+    Default: NameLower.  Change at your own risk
+
+.PARAMETER Label
+    What label do we assign the data we pull?
+
+    Defaults to Server.  Change at your own risk
+
+.PARAMETER Properties
+    Properties to extract and select from Racktables
+
+.PARAMETER Excludes
+    Properties to exclude (in line with transforms)
+
+.PARAMETER Transforms
+    Properties to select again (in line with excludes)
+
+    Example:
+
+    *, # Keep all properties from -Properties
+    @{
+        label='NameLower'
+        expression={
+            @($_.System -split " ")[0].ToLower()
+        }
+    }
+
+    This is the default.  It keeps all properties from -Properties, and add a calculated NameLower
+
+.PARAMETER BaseUri
+    Racktables "API" Base URI
+
+    See http://sjoeboo.github.io/blog/2012/05/31/getting-racktables-location-info-into-puppet/ for details
+
+.PARAMETER Domains
+    Append these to make Racktables MergeProperty value fully qualified.
+
+    E.g. if Racktables NameLower is dc01, and Domains is contoso.com and contoso2.com,
+         we merge data into servers with hostname dc01.contoso.com and/or dc01.contoso2.com
+
+.FUNCTIONALITY
+    Dots
+#>
 [cmdletbinding()]
 param(
     [string]$Prefix = 'RACK',
@@ -11,7 +76,7 @@ param(
         'height',
         'ru'
     ),
-    [string[]]$Excludes = 'puppet_classes',
+    [string[]]$Excludes,
     [object[]]$Transforms = @(
         '*',
         @{

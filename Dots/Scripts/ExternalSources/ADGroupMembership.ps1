@@ -1,3 +1,20 @@
+<#
+.SYNOPSIS
+    Read group memberships from Active Directory, add to Neo4j
+
+.DESCRIPTION
+    Read group memberships from Active Directory, add to Neo4j
+
+    * Assumes all AD related prefixes are AD (default)
+    * Uses SID to assign memberships
+    * Only assigns memberships for enabled Users
+    * Also creates ManagedBy relationships
+
+    This is invoked by Connect-TheDots
+
+.FUNCTIONALITY
+    Dots
+#>
 [cmdletbinding()]
 param(
 )
