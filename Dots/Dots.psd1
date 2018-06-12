@@ -46,7 +46,7 @@ PowerShellVersion = '5.0'
 
 # Modules that must be imported into the global environment prior to importing this module
 RequiredModules = @(
-    @{ModuleName="PSNeo4j"; ModuleVersion="0.0.29"},
+    @{ModuleName="PSNeo4j"; ModuleVersion="0.0.30"},
     @{ModuleName="powershell-yaml"; ModuleVersion="0.3.4"}
 )
 
@@ -54,7 +54,7 @@ RequiredModules = @(
 # FormatsToProcess = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = @('Connect-TheDots','Get-DotsConfig','Get-DotsConfigPath','Get-DotsScript','Initialize-DotsConfig','Set-DotsConfig')
+FunctionsToExport = '*'
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
