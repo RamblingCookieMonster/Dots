@@ -1,3 +1,53 @@
+<#
+.SYNOPSIS
+    Pull groups from Active Directory, add to Neo4j
+
+.DESCRIPTION
+    Pull groups from Active Directory, add to Neo4j
+
+    This is invoked by Connect-TheDots
+
+.PARAMETER Prefix
+    Prefix to append to properties when we add them to Neo4j
+
+    This helps identify properties that might come from mutiple sources, or where the source is ambiguous
+
+    For example, Description becomes ADDescription
+
+    Defaults to AD.  Change at your own risk
+
+.PARAMETER MergeProperty
+    We use this to correlate with existing AD group data in Neo4j
+
+    Default: SID
+
+.PARAMETER Label
+    What label do we assign the data we pull?
+
+    Defaults to Group.  Change at your own risk
+
+.PARAMETER Properties
+    Properties to extract and select from AD
+
+.PARAMETER Excludes
+    Properties to exclude (in line with transforms)
+
+.PARAMETER Transforms
+    Properties to select again (in line with excludes)
+
+    Example:
+
+    *, # Keep all properties from -Properties
+    @{
+        label = 'ParentCanonicalName'
+        expression = {$_.CanonicalName -replace "/$($_.Name)$"}
+    }
+
+    This would keep all properties from -Properties, and add a calculated ParentCanonicalName
+
+.FUNCTIONALITY
+    Dots
+#>
 [cmdletbinding()]
 param(
     [string]$Prefix = 'AD',
