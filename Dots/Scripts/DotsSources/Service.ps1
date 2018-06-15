@@ -5,11 +5,15 @@
     .DESCRIPTION
         Read Service definitions, add to Neo4j
 
+        This clears out existing service nodes, and any RelationshipTypes that point at a service node before populating neo4j
+
+        See Dots/Data/Service/0.template.yml for schema and an example
+
         This is invoked by Connect-TheDots
 
     .PARAMETER RelationshipTypes
         Whitelist of user/group relationship types to this service.
-        Defaults to Users, Admins, Owners, Data_Owners
+        Defaults to Users, Admins, Owners, Data_Owner, and Accesses
 
     .PARAMETER Path
         Path to yaml files.  Defaults to DataPath\Service\*.yml

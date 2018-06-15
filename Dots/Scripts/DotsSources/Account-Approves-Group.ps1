@@ -5,6 +5,10 @@
 .DESCRIPTION
     Read Account-Approves-Group definitions, add to Neo4j
 
+    This clears out existing ApprovesMembership relationships before populating neo4j
+
+    See Dots/Data/Account-Approves-Group/0.template.yml for schema and an example
+
     This is invoked by Connect-TheDots
 
 .PARAMETER Path

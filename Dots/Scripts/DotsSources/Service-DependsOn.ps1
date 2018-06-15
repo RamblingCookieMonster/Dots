@@ -5,6 +5,10 @@
     .DESCRIPTION
         Read Service-DependsOn definitions, add to Neo4j
 
+        This clears out existing Service-DependsOn relationships, and IsPartOf->Service relationships before populating neo4j
+
+        See Dots/Data/Service-DependsOn/0.template.yml for schema and an example
+
         This is invoked by Connect-TheDots
 
     .PARAMETER Path
