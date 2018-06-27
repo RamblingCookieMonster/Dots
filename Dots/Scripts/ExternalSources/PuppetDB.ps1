@@ -123,7 +123,8 @@ param(
                 }
             }
         }
-    )
+    ),
+    [switch]$AllLower = $Script:AllLower
 )
 # Dot source so module import is available in this scope
 if($script:TestMode) {
@@ -152,6 +153,9 @@ $Nodes = foreach($Node in $Nodes) {
 $Nodes = Foreach($Node in $Nodes) {
     $Output = Add-PropertyPrefix -Prefix $Prefix -Object $Node
     Add-Member -InputObject $Output -MemberType NoteProperty -Name "${script:CMDBPrefix}${Prefix}UpdateDate" -Value $Date -Force
+    if($AllLower) {
+        ConvertTo-Lower -InputObject $Output    
+    }
     $Output
 }
 

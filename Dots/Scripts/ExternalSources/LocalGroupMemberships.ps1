@@ -46,7 +46,8 @@
 param(
     [string]$Prefix = 'GRPMBR',
     [string[]]$DataPath,
-    [string]$Domains
+    [string]$Domains,
+    [switch]$AllLower = $Script:AllLower
 )
 $Date = Get-Date
 # Dot source so module import is available in this scope
@@ -78,6 +79,9 @@ foreach($GroupMember in $GroupMembers){
         }
         $LocalGroup = $GroupMember.LocalGroup
         $RelationshipType = $GroupMap.$LocalGroup
+        if($AllLower) {
+            ConvertTo-Lower -InputObject $GroupMember    
+        }
         $Properties = @{
             "${Script:CMDBPrefix}${Prefix}UpdateDate" = $Date
             Depth = $GroupMember.Depth

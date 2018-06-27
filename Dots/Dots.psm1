@@ -21,7 +21,8 @@ $DotsProps = 'CMDBPrefix',
              'ScriptsToRun',
              'ScriptsToIgnore',
              'ServerUnique',
-             'TestMode'
+             'TestMode',
+             'AllLower'
 $DotsConfig = [pscustomobject]@{} | Select-Object $DotsProps
 $_DotsConfigXmlpath = Get-DotsConfigPath
 if(-not (Test-Path -Path $_DotsConfigXmlpath -ErrorAction SilentlyContinue)) {

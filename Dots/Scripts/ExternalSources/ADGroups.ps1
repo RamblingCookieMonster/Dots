@@ -82,7 +82,8 @@ param(
                 }
                 catch {Write-Warning "$($a.Name) managed by doesn't exist:$($a.ManagedBy)"}}
         }
-    )
+    ),
+    [switch]$AllLower = $Script:AllLower
 )
 $Unique = "${Prefix}${MergeProperty}"
 $Date = Get-Date
@@ -103,6 +104,9 @@ $Nodes = Foreach($Node in $Nodes) {
     $Node.SID = $Node.SID.Value
     $Output = Add-PropertyPrefix -Prefix $Prefix -Object $Node
     Add-Member -InputObject $Output -MemberType NoteProperty -Name "${script:CMDBPrefix}${Prefix}UpdateDate" -Value $Date -Force
+    if($AllLower) {
+        ConvertTo-Lower -InputObject $Output -Exclude SID   
+    }
     $Output
 }
 

@@ -82,7 +82,8 @@ param(
             expression = {$_.Name.tolower()}
         }
     ),
-    [int]$ExcludeOlderThanMonths = 12
+    [int]$ExcludeOlderThanMonths = 12,
+    [switch]$AllLower = $Script:AllLower
 )
 $Unique = "${Prefix}${MergeProperty}"
 $Date = Get-Date
@@ -104,6 +105,9 @@ $Nodes = Get-ADComputer -Filter * -Properties $Properties |
 $Nodes = Foreach($Node in $Nodes) {
     $Output = Add-PropertyPrefix -Prefix $Prefix -Object $Node
     Add-Member -InputObject $Output -MemberType NoteProperty -Name "${script:CMDBPrefix}${Prefix}UpdateDate" -Value $Date -Force
+    if($AllLower) {
+        ConvertTo-Lower -InputObject $Output    
+    }
     $Output
 }
 

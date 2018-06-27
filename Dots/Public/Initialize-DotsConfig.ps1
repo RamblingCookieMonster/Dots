@@ -52,6 +52,10 @@ function Initialize-DotsConfig {
     .PARAMETER TestMode
         If specified, we generate Dots from pre-existing mock data
 
+    .PARAMETER AllLower
+        If specified, attempt to convert all string properties to lowercase before loading into Neo4j
+        Defaults to $True
+
     .PARAMETER Path
         If specified, save config file to this file path
         Defaults to
@@ -77,6 +81,7 @@ function Initialize-DotsConfig {
         [string[]]$ScriptsToIgnore = @('PuppetDB', 'ScheduledTask'),
         [string]$ServerUnique, # Default is computed below
         [switch]$TestMode,
+        [bool]$AllLower = $true,
         [string]$Path = $script:_DotsConfigXmlpath
     )
     if(-not $PSBoundParameters.ContainsKey('ServerUnique')) {
@@ -93,6 +98,7 @@ function Initialize-DotsConfig {
         'ScriptsToIgnore'    { $Script:DotsConfig.ScriptsToIgnore = [string[]]$ScriptsToIgnore }
         'ServerUnique'       { $Script:DotsConfig.ServerUnique = $ServerUnique }
         'TestMode'           { $Script:DotsConfig.TestMode = [bool]$TestMode }
+        'AllLower'           { $Script:DotsConfig.AllLower = $AllLower }
     }
 
     # Create variables for config props, for convenience

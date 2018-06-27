@@ -87,7 +87,8 @@ param(
         }
     ),
     [string]$BaseUri,
-    [string[]]$Domains
+    [string[]]$Domains,
+    [switch]$AllLower = $Script:AllLower
 )
 # Dot source so module import is available in this scope
 if($script:TestMode) {
@@ -198,6 +199,9 @@ $Dupes = foreach($Name in $Names) {
 $Nodes = Foreach($Node in $Nodes.where({$Dupes -notcontains $_.NameLower})) {
     $Output = Add-PropertyPrefix -Prefix $Prefix -Object $Node
     Add-Member -InputObject $Output -MemberType NoteProperty -Name "${script:CMDBPrefix}${Prefix}UpdateDate" -Value $Date -Force
+    if($AllLower) {
+        ConvertTo-Lower -InputObject $Output    
+    }
     $Output
 }
 

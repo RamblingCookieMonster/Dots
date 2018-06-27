@@ -89,7 +89,8 @@ param(
             }
         }
     ),
-    [string[]]$DataPath
+    [string[]]$DataPath,
+    [switch]$AllLower = $Script:AllLower
 )
 $Date = Get-Date
 # Dot source so module import is available in this scope
@@ -109,6 +110,9 @@ $Tasks = foreach($File in $Files){
 $Tasks = Foreach($Task in $Tasks) {
     $Output = Add-PropertyPrefix -Prefix $Prefix -Object $Task
     Add-Member -InputObject $Output -MemberType NoteProperty -Name "${Script:CMDBPrefix}${Prefix}UpdateDate" -Value $Date -Force
+    if($AllLower) {
+        ConvertTo-Lower -InputObject $Output    
+    }
     $Output
 }
 
