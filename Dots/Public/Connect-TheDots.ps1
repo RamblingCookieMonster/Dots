@@ -90,8 +90,9 @@ function Connect-TheDots {
             $GetScriptParams.add($_,$PSBoundParameters[$_])
         }
     }
+    $StartDate = Get-Date
     $Scripts = Get-DotsScript @GetScriptParams
-    Write-Verbose "Running Scripts: $($Scripts.FullName | Out-String)"
+    Write-Verbose "$(Get-Date -Format s): Running Scripts: $($Scripts.FullName | Out-String)"
     foreach($Script in $Scripts) {
         if ( $PSCmdlet.ShouldProcess( "Connected the dots '$($Script.Fullname)'",
                                       "Connect the dots '$($Script.Fullname)'?",
@@ -103,13 +104,15 @@ function Connect-TheDots {
                 if($PSBoundParameters.ContainsKey('ScriptParameters') -and $ScriptParameters.ContainsKey($Basename) -and $ScriptParameters.$Basename -is [hashtable]){
                     $Params = $ScriptParameters.$Basename
                 }
-                Write-Verbose "Dot sourcing [$($Script.Fullname)] with params`n $($Params | Out-String)"
+                $Date = Get-Date
+                Write-Verbose "$(Get-Date -Format s): Dot sourcing [$($Script.Fullname)] with params`n $($Params | Out-String)"
                 . $Script.FullName @Params
+                Write-Verbose "$(Get-Date -Format s): Completed [$($Script.Fullname)] in $( [math]::Round( ((Get-Date) - $Date ).TotalMinutes)) minutes"
             }
             catch {
                 Write-Error $_
             }
         }
     }
-    Write-Verbose "Dots Connected!"
+    Write-Verbose "$(Get-Date -Format s): Dots from [$($Scripts.count)] sources connected in $( [math]::Round( ((Get-Date) - $StartDate ).TotalMinutes)) minutes!!"
 }
