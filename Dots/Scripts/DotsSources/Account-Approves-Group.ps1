@@ -47,7 +47,14 @@ foreach($PathItem in $Path) {
     foreach($file in $files) {
         "### PARSING ### $($file.fullname)"
         $yaml = Get-Content $file.fullname -Raw
-        $data = ConvertFrom-Yaml -Yaml $yaml
+        try {
+            $data = ConvertFrom-Yaml -Yaml $yaml -ErrorAction Stop
+        }
+        catch {
+            "EEE ERROR PARSING $($file.fullname)"
+            Write-Warning $_
+            continue
+        }
 
         foreach($Group in $data.keys) {
             foreach($Approver in $Data[$Group].approvers) {

@@ -92,6 +92,7 @@ function Connect-TheDots {
     }
     $StartDate = Get-Date
     $Scripts = Get-DotsScript @GetScriptParams
+    $Performance = New-Object System.Collections.ArrayList
     Write-Verbose "$(Get-Date -Format s): Running Scripts: $($Scripts.FullName | Out-String)"
     foreach($Script in $Scripts) {
         if ( $PSCmdlet.ShouldProcess( "Connected the dots '$($Script.Fullname)'",
@@ -107,7 +108,15 @@ function Connect-TheDots {
                 $Date = Get-Date
                 Write-Verbose "$(Get-Date -Format s): Dot sourcing [$($Script.Fullname)] with params`n $($Params | Out-String)"
                 . $Script.FullName @Params
-                Write-Verbose "$(Get-Date -Format s): Completed [$($Script.Fullname)] in $( [math]::Round( ((Get-Date) - $Date ).TotalMinutes)) minutes"
+                $Duration = [math]::Round( ((Get-Date) - $Date ).TotalMinutes)
+                Write-Verbose "$(Get-Date -Format s): Completed [$($Script.Fullname)] in [$Duration] minutes"
+                $Perf = [pscustomobject]@{
+                    Source = $Basename
+                    Duration = $Duration
+                    StartTime = $Date
+                    Path = $Script.Fullname
+                }
+                [void]$Performance.add($Perf)
             }
             catch {
                 Write-Error $_
@@ -115,4 +124,5 @@ function Connect-TheDots {
         }
     }
     Write-Verbose "$(Get-Date -Format s): Dots from [$($Scripts.count)] sources connected in $( [math]::Round( ((Get-Date) - $StartDate ).TotalMinutes)) minutes!!"
+    Write-Verbose "$($Performance | Sort-Object Duration | Format-List | Out-String)"
 }

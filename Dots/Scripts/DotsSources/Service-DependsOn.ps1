@@ -44,7 +44,14 @@ foreach($PathItem in $Path) {
     foreach($file in $files) {
         "### PARSING ### $($file.fullname)"
         $yaml = Get-Content $file.fullname -Raw
-        $data = ConvertFrom-Yaml -Yaml $yaml
+        try {
+            $data = ConvertFrom-Yaml -Yaml $yaml -ErrorAction stop
+        }
+        catch {
+            "EEE ERROR PARSING $($file.fullname)"
+            Write-Warning $_
+            continue
+        }
         foreach($DependencyKey in $data.keys) {
             $Params = @{
                 Passthru = $True

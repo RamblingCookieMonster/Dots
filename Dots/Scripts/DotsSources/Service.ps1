@@ -59,7 +59,14 @@ foreach($PathItem in $Path) {
     foreach($file in $files) {
         "### PARSING ### $($file.fullname)"
         $yaml = Get-Content $file.fullname -Raw
-        $data = ConvertFrom-Yaml -Yaml $yaml
+        try {
+            $data = ConvertFrom-Yaml -Yaml $yaml -ErrorAction Stop
+        }
+        catch {
+            "EEE ERROR PARSING $($file.fullname)"
+            Write-Warning $_
+            continue
+        }
         $namekey = $file.basename
         # Extract reserved keys that aren't a part of the service
         $Sleep = $null
